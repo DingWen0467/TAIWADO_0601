@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity" >
+
+    <TimePicker
+        android:id="@+id/timePicker2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:headerBackground="@android:color/holo_green_light"
+        android:keepScreenOn="true"
+        android:numbersSelectorColor="@android:color/holo_green_light"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:timePickerMode="clock"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:id="@+id/button_timerecord"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/timePicker2"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="34dp"
+        android:textSize="65px"
+        android:text="打　刻"
+        android:onClick="doClickOk"
+        />
+
+    <TextView
+        android:id="@+id/text_timeinfo"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:textSize="45px"
+        android:layout_centerHorizontal="true"
+        android:text=""
+
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="20dp" />
+
+
+</RelativeLayout>
