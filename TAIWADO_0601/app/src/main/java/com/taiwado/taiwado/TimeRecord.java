@@ -15,7 +15,7 @@ public class TimeRecord extends BmobObject {
     private String TimeOutAddress;
     private  String TimeDate;
 
-    public String getUsername(String username) {
+    public String getUsername() {
         return this.username;
     }
     public void setUsername(String username) {

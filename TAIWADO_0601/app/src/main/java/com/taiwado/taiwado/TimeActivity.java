@@ -7,19 +7,21 @@ import android.icu.text.SimpleDateFormat;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import java.util.Date;
+import java.util.List;
 
 import cn.bmob.v3.Bmob;
+import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
 
-public class TimeActivity extends AppCompatActivity {
+public class TimeActivity extends  BaseActivity {
 
     private static final int REQUEST_TIME = 2;
     private static int timecount = 0;
@@ -32,6 +34,7 @@ public class TimeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_time);
         Bmob.initialize(this, "396d004b9ddb44265f799ad3d9c7ea5d");
         username = getIntent().getStringExtra("username");
+        queryUserByObjectId(username);
     }
 
     @SuppressWarnings("NewApi")
@@ -56,10 +59,9 @@ public class TimeActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void timeRecord() {
-        if (timecount == 0) {
-            createTimeRecord(getIntent().getStringExtra("username"), nowTime(), nowDate());
 
-            timecount++;
+        if (TimeObjectID == null) {
+            createTimeRecord(username);
 
         } else {
             updateTimeRecord(username, nowTime());
@@ -67,12 +69,31 @@ public class TimeActivity extends AppCompatActivity {
 
     }
 
-    private void createTimeRecord(final String username, String time, String date) {
+    private void queryUserByObjectId(final String username){
+        final String[] str = {null};
+        BmobQuery<TimeRecord> bmobQuery = new BmobQuery<TimeRecord>();
+        bmobQuery.addWhereEqualTo("username",username);
+        bmobQuery.addWhereEqualTo("TimeDate",nowDate());
+        bmobQuery.setLimit(10);
+        addSubscription(bmobQuery.findObjects(new FindListener<TimeRecord>() {
+            @Override
+            public void done(List<TimeRecord> list, BmobException e) {
+                if (e == null) {
+                    for (TimeRecord timeRecord : list) {
+                        str[0] = timeRecord.getObjectId();
+                    }
+                    TimeObjectID = str[0];
+                }
+            }
+        }));
+    }
+
+    private void createTimeRecord(final String username) {
         final String[] TimeObjectID = {null};
         final TimeRecord tp1 = new TimeRecord();
         tp1.setUsername(username);
-        tp1.setTimeIn(time);
-        tp1.setTimeDate(date);
+        tp1.setTimeIn(nowTime());
+        tp1.setTimeDate(nowDate());
         tp1.save(new SaveListener<String>() {
             @Override
             public void done(String s, BmobException e) {
@@ -92,7 +113,6 @@ public class TimeActivity extends AppCompatActivity {
         edtior.putString(username, TimeReObjectID);
         edtior.commit();
     }
-
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void updateTimeRecord(String username, String time) {
@@ -140,6 +160,7 @@ public class TimeActivity extends AppCompatActivity {
         }
         return nowDate;
     }
+
     public String setTimeInfo(){
         String strTime = null;
 
@@ -152,6 +173,7 @@ public class TimeActivity extends AppCompatActivity {
         }
         return strTime;
     }
+
     public String setTimeAdd (){
         String strAddInfo = null;
 
@@ -167,7 +189,6 @@ public class TimeActivity extends AppCompatActivity {
 
         return strAddInfo;
     }
-
 
     public String getAddress() {
         String Address = null;

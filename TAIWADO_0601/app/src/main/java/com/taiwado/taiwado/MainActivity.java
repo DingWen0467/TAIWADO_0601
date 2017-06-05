@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
     public static int count = 0;
     private static final String TAG = MainActivity.class.getSimpleName();
     private long clickTime = 0; // 第一次点击的时间
-
+    public TimeCount timeCount;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +42,9 @@ public class MainActivity extends AppCompatActivity {
         Main_username.setText(username);
         TextView text_Now = (TextView) findViewById(R.id.textNow);
         text_Now.setText(getNowMonth());
+        timeCount = new TimeCount();
+        timeCount.queryObjects(username);
+
     }
 
     @Override
@@ -54,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Inflate the menu; this adds items to the action bar if it is present.
         //getMenuInflater().inflate(R.menu.menu_main, menu);
+
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
         return super.onCreateOptionsMenu(menu);
@@ -82,6 +86,8 @@ public class MainActivity extends AppCompatActivity {
     public void doClickOk(View v) {
         switch (v.getId()) {
             case R.id.button_Time:
+                String objectid = timeCount.getTimeObjectID();
+                Toast.makeText(this,objectid,Toast.LENGTH_SHORT).show();
                 Intent intentTime = new Intent(this, TimeActivity.class);
                 intentTime.putExtra("username", username);
                 startActivityForResult(intentTime, REQUEST_TIME);
