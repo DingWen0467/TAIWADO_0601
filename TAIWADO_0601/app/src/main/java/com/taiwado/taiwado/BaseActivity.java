@@ -103,4 +103,22 @@ public class BaseActivity extends Activity {
         }
         return nowDate;
     }
+
+    public String getAddress() {
+        String Address = null;
+        getLocation locationActivity = new getLocation();
+        Address = locationActivity.nowLocationName;
+        if (Address == null) {
+            Address = "Failed to get Address!";
+        } else {
+            setAddress(Address);
+        }
+        return Address;
+    }
+
+    public void setAddress(String address) {
+        UserInfo userInfo = new UserInfo();
+        userInfo.setTimeINAddress(address);
+
+    }
 }

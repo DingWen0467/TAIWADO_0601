@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.icu.text.SimpleDateFormat;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
     private long clickTime = 0; // 第一次点击的时间
     public TimeCount timeCount;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,11 +88,13 @@ public class MainActivity extends AppCompatActivity {
     public void doClickOk(View v) {
         switch (v.getId()) {
             case R.id.button_Time:
-                String objectid = timeCount.getTimeObjectID();
-                Toast.makeText(this,objectid,Toast.LENGTH_SHORT).show();
-                Intent intentTime = new Intent(this, TimeActivity.class);
-                intentTime.putExtra("username", username);
-                startActivityForResult(intentTime, REQUEST_TIME);
+                String timeInfo = timeCount.getTimeObjectID();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    setTimeText(username,timeInfo);
+                }
+                //Intent intentTime = new Intent(this, TimeActivity.class);
+                //intentTime.putExtra("username", username);
+                //startActivityForResult(intentTime, REQUEST_TIME);
                 break;
 
             case R.id.button_Shifuto:
@@ -187,5 +191,23 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void setTimeText(String username,String timeInfo){
+        TextView text_timeIn = (TextView) findViewById(R.id.textTimeIn);
+        TextView text_AddIn = (TextView) findViewById(R.id.textAddIn);
+        TextView text_timeOut = (TextView)findViewById(R.id.textTimeOut);
+        TextView text_AddOut = (TextView)findViewById(R.id.textAddOut);
 
+        if (timeInfo == null){
+            timeCount.createTimeRecord(username);
+            text_timeIn.setText(timeCount.nowTime());
+            text_AddIn.setText(timeCount.getAddress());
+        }else{
+            timeCount.updateTimeRecord();
+            text_timeIn.setText(" 出勤時間：" + timeCount.getTimeIn());
+            text_AddIn.setText(" 出勤地点：" + timeCount.getAddress());
+            text_timeOut.setText(" 退勤時間：" + timeCount.nowTime());
+            text_AddOut.setText(" 退勤地点：" + timeCount.getAddress());
+        }
+    }
 }

@@ -22,14 +22,31 @@ import cn.bmob.v3.listener.UpdateListener;
  */
 
 public class TimeCount extends BaseActivity{
-    private static String ObjectID = null;
+
     private String TimeObjectID;
+    private String TimeIn;
+    private String AddIn;
+    private static String objectId = null;
 
     public String getTimeObjectID() {
         return this.TimeObjectID;
     }
     public void setTimeObjectID(String TimeObjectID) {
         this.TimeObjectID = TimeObjectID;
+    }
+
+    public String getAddIn(){
+        return this.AddIn;
+    }
+    public void setAddIn(String AddIn){
+        this.AddIn = AddIn;
+    }
+
+    public String getTimeIn(){
+        return this.TimeIn;
+    }
+    public void setTimeIn(String TimeIn){
+        this.TimeIn = TimeIn;
     }
 
     public void queryObjects(String username){
@@ -53,13 +70,12 @@ public class TimeCount extends BaseActivity{
 				if(e==null){
 
 					for (TimeRecord timeReccord : object) {
-						Log.d(TAG, "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ");
-						Log.d(TAG, "ObjectId = "+timeReccord.getObjectId());
-						Log.d(TAG, "CreatedAt = "+timeReccord.getCreatedAt());
-						Log.d(TAG, "UpdatedAt = "+timeReccord.getUpdatedAt());
-                        ObjectID = timeReccord.getObjectId();
-                        setTimeObjectID(ObjectID);
-
+                        String timeIn = timeReccord.getTimeIn();
+                        setTimeIn(timeIn);
+                        String objectId = timeReccord.getObjectId();
+                        setTimeObjectID(objectId);
+                        String AddIn = timeReccord.TimeInAddress();
+                        setAddIn(AddIn);
 					}
 				}else{
 					loge(e);
@@ -85,7 +101,7 @@ public class TimeCount extends BaseActivity{
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void createTimeRecord(final String username) {
-        final String[] TimeObjectID = {null};
+        final String[] objectId = {null};
         final TimeRecord tp1 = new TimeRecord();
         tp1.setUsername(username);
         tp1.setTimeIn(nowTime());
@@ -94,19 +110,19 @@ public class TimeCount extends BaseActivity{
             @Override
             public void done(String s, BmobException e) {
                 if (e == null) {
-                    TimeObjectID[0] = tp1.getObjectId();
+                    objectId[0] = tp1.getObjectId();
                 }
             }
         });
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void updateTimeRecord(String timeObjectID) {
+    public void updateTimeRecord() {
         TimeRecord timeRecord = new TimeRecord();
         timeRecord.setTimeOut(nowTime());
         timeRecord.setTimeDate(nowDate());
         //更新DB  userInfo
-        timeRecord.update(TimeObjectID, new UpdateListener() {
+        timeRecord.update(objectId, new UpdateListener() {
             @Override
             public void done(BmobException e) {
                 if (e == null) {
@@ -139,29 +155,6 @@ public class TimeCount extends BaseActivity{
         Date curDate = new Date(System.currentTimeMillis());
         str = formatter.format(curDate);
         return str;
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public String setTimeIn() {
-        String strTime = null;
-        strTime = "　出勤時間：" + nowTime();
-        return strTime;
-    }
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public String setTimeOut(){
-        String strTime = null;
-        strTime = "　退勤時間：" + nowTime();
-        return strTime;
-    }
-    public String setTimeAddIn () {
-        String strAddInfo = null;
-        strAddInfo = "　出勤地点：" + getAddress();
-        return strAddInfo;
-    }
-    public String setTimeAddOut(){
-        String strAddInfo = null;
-        strAddInfo = "　退勤地点：" + getAddress();
-        return strAddInfo;
     }
 
     public String getAddress() {

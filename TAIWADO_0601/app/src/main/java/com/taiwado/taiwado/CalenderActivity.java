@@ -28,7 +28,7 @@ public class CalenderActivity extends AppCompatActivity implements DateActivity.
     public void onItemLongPress(Date day){
         DateFormat df = SimpleDateFormat.getDateInstance();
         Toast.makeText(this,df.format(day),Toast.LENGTH_LONG).show();
-        Intent intentKyuuka = new Intent(CalenderActivity.this,Kyuuka.class);
+        Intent intentKyuuka = new Intent(CalenderActivity.this,KyuukaActivity.class);
         startActivity(intentKyuuka);
     }
 }

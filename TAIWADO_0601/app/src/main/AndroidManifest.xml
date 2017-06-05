@@ -44,10 +44,7 @@
             android:label="@string/title_activity_hanbai_list"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".InsertData" />
-        <activity
-            android:name=".Kyuuka"
-            android:label="@string/title_activity_kyuuka"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".KyuukaActivity"></activity>
     </application>
 
 </manifest>
