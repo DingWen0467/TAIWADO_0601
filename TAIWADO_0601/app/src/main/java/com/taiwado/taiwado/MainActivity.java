@@ -7,35 +7,46 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static boolean isCloseAll = false;
     public static final int REQUEST_STOP = 0;
     public static final int REQUEST_TIME = 2;
     public static String username = null;
     public static String ObjectId = null;
     public static String TimeReObjectID = null;
     public static int count = 0;
+    private static final String TAG = MainActivity.class.getSimpleName();
+    private long clickTime = 0; // 第一次点击的时间
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        CloseAllActivity.getInstance().addActivity(this);
         username = getIntent().getStringExtra("username");
         ObjectId = getIntent().getStringExtra("ObjectId");
-        TextView Main_username = (TextView)findViewById(R.id.text_username);
+        TextView Main_username = (TextView) findViewById(R.id.text_username);
         Main_username.setText(username);
-        TextView text_Now = (TextView)findViewById(R.id.textNow);
+        TextView text_Now = (TextView) findViewById(R.id.textNow);
         text_Now.setText(getNowMonth());
+    }
+
+    @Override
+    public void onBackPressed() {
+        exit();
     }
 
     @Override
@@ -44,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         //getMenuInflater().inflate(R.menu.menu_main, menu);
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_main,menu);
+        inflater.inflate(R.menu.menu_main, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -61,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         if (id == R.id.action_search) {
-            Intent intentSearchList = new Intent(MainActivity.this,SearchListActivity.class);
+            Intent intentSearchList = new Intent(MainActivity.this, SearchListActivity.class);
             startActivity(intentSearchList);
         }
 
@@ -72,8 +83,8 @@ public class MainActivity extends AppCompatActivity {
         switch (v.getId()) {
             case R.id.button_Time:
                 Intent intentTime = new Intent(this, TimeActivity.class);
-                intentTime.putExtra("username",username);
-                startActivityForResult(intentTime,REQUEST_TIME);
+                intentTime.putExtra("username", username);
+                startActivityForResult(intentTime, REQUEST_TIME);
                 break;
 
             case R.id.button_Shifuto:
@@ -82,17 +93,17 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             case R.id.button_Tsukinhi:
-                Intent intentTsukinhi = new Intent(this,TrafficListActivity.class);
+                Intent intentTsukinhi = new Intent(this, TrafficListActivity.class);
                 startActivity(intentTsukinhi);
                 break;
 
             case R.id.button_Uriage:
-                Intent intentUriage = new Intent(this,HanbaiList.class);
+                Intent intentUriage = new Intent(this, HanbaiList.class);
                 startActivity(intentUriage);
                 break;
 
             case R.id.button_Zaikurakensu:
-                Intent intentSearchList = new Intent(MainActivity.this,SearchListActivity.class);
+                Intent intentSearchList = new Intent(MainActivity.this, SearchListActivity.class);
                 startActivity(intentSearchList);
                 break;
 
@@ -103,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
 
     @TargetApi(Build.VERSION_CODES.N)
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        String strTime,strAddInfo = null;
+        String strTime, strAddInfo = null;
 
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
@@ -114,15 +125,15 @@ public class MainActivity extends AppCompatActivity {
                     strTime = data.getExtras().getString("timerecord");
                     strAddInfo = data.getExtras().getString("timeaddinfo");
 
-                    TextView text_timeIn = (TextView)findViewById(R.id.textTimeIn);
-                    TextView text_timeOut = (TextView)findViewById(R.id.textTimeOut);
-                    TextView text_AddIn = (TextView)findViewById(R.id.textAddIn);
-                    TextView text_AddOut = (TextView)findViewById(R.id.textAddOut);
-                    if (count == 0){
+                    TextView text_timeIn = (TextView) findViewById(R.id.textTimeIn);
+                    TextView text_timeOut = (TextView) findViewById(R.id.textTimeOut);
+                    TextView text_AddIn = (TextView) findViewById(R.id.textAddIn);
+                    TextView text_AddOut = (TextView) findViewById(R.id.textAddOut);
+                    if (count == 0) {
                         text_timeIn.setText(strTime);
                         text_AddIn.setText(strAddInfo);
                         count++;
-                    }else {
+                    } else {
                         text_timeOut.setText(strTime);
                         text_AddOut.setText(strAddInfo);
                     }
@@ -150,5 +161,25 @@ public class MainActivity extends AppCompatActivity {
 
         return month;
     }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        // 是否触发按键为back键
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            onBackPressed();
+            return true;
+        } else { // 如果不是back键正常响应
+            return super.onKeyDown(keyCode, event);
+        }
+    }
+    private void exit() {
+        if ((System.currentTimeMillis() - clickTime) > 2000) {
+            Toast.makeText(this, "再按一次后退键退出程序", Toast.LENGTH_SHORT).show();
+            clickTime = System.currentTimeMillis();
+        } else {
+            CloseAllActivity.getInstance().exit();
+        }
+    }
+
 
 }

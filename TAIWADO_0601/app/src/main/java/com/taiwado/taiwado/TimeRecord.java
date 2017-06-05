@@ -11,7 +11,8 @@ public class TimeRecord extends BmobObject {
     private String username;
     private String TimeIn;
     private String TimeOut;
-    private String TimeAddress;
+    private String TimeInAddress;
+    private String TimeOutAddress;
     private  String TimeDate;
 
     public String getUsername(String username) {
@@ -35,11 +36,18 @@ public class TimeRecord extends BmobObject {
         this.TimeOut = timeOut;
     }
 
-    public String getTimeAddress() {
-        return TimeAddress;
+    public String TimeInAddress() {
+        return TimeInAddress;
     }
-    public void setTimeAddress(String timeAddress) {
-        this.TimeAddress = timeAddress;
+    public void TimeInAddress(String timeInAddress) {
+        this.TimeInAddress = timeInAddress;
+    }
+
+    public String TimeOutAddress(){
+        return TimeOutAddress;
+    }
+    public void TimeOutAddress(String timeOutAddress){
+        this.TimeOutAddress = timeOutAddress;
     }
 
     public  String getTimeDate() {
