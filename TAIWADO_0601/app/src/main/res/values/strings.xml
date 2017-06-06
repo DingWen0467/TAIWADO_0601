@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">TAIWADO</string>
     <string name="title_activity_main">MainActivity</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">休暇</string>
     <string name="action_search">Search</string>
     <string name="action_plus">plus</string>
     <string name="title_activity_traffic_list">TrafficListActivity</string>

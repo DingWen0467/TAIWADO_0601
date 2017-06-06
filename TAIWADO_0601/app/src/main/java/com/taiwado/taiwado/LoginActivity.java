@@ -110,11 +110,11 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void queryUserByObjectId(final String username, final String password) {
+    private void queryUserByObjectId(final String name, final String pass) {
         final String[] str = {null};
         BmobQuery<UserInfo> bmobQuery = new BmobQuery<UserInfo>();
-        bmobQuery.addWhereEqualTo("userName",username);
-        bmobQuery.addWhereEqualTo("password",password);
+        bmobQuery.addWhereEqualTo("userName",name);
+        bmobQuery.addWhereEqualTo("password",pass);
         bmobQuery.setLimit(10);
         bmobQuery.findObjects(new FindListener<UserInfo>() {
             @Override
@@ -125,13 +125,13 @@ public class LoginActivity extends AppCompatActivity {
                     }
 
                     if ((String)str[0] != null) {
-                        edtior.putString("userName", username);
-                        edtior.putString("passWord", password);
+                        edtior.putString("userName", name);
+                        edtior.putString("passWord", pass);
                         edtior.putString("ObjectId",str[0]);
-                        etUserName.setText(username);
-                        etUserPass.setText(password);
+                        //etUserName.setText(name);
+                        //etUserPass.setText(pass);
                         edtior.commit();
-                        StartApp(username,str[0]);
+                        StartApp(name,str[0]);
                     }else{
                         etUserName.setText(null);
                         etUserPass.setText(null);

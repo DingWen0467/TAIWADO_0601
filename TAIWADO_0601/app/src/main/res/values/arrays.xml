@@ -28,4 +28,33 @@
         <item>資生堂</item>
     </string-array>
 
+    <string-array name="time">
+        <item> </item>
+        <item>06:00</item>
+        <item>07:00</item>
+        <item>08:00</item>
+        <item>09:00</item>
+        <item>10:00</item>
+        <item>11:00</item>
+        <item>12:00</item>
+        <item>13:00</item>
+        <item>14:00</item>
+        <item>15:00</item>
+        <item>16:00</item>
+        <item>17:00</item>
+        <item>18:00</item>
+        <item>19:00</item>
+        <item>20:00</item>
+        <item>21:00</item>
+        <item>22:00</item>
+        <item>23:00</item>
+    </string-array>
+
+    <string-array name="kyuuka">
+        <item> </item>
+        <item>全休</item>
+        <item>前休</item>
+        <item>後休</item>
+    </string-array>
+
 </resources>

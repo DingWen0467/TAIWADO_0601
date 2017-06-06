@@ -75,6 +75,8 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent intentKyuuka = new Intent(MainActivity.this,KyuukaActivity.class);
+            startActivity(intentKyuuka);
             return true;
         }
         if (id == R.id.action_search) {
@@ -184,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
     }
     private void exit() {
         if ((System.currentTimeMillis() - clickTime) > 2000) {
-            Toast.makeText(this, "再按一次后退键退出程序", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "もう一度", Toast.LENGTH_SHORT).show();
             clickTime = System.currentTimeMillis();
         } else {
             CloseAllActivity.getInstance().exit();
@@ -200,14 +202,18 @@ public class MainActivity extends AppCompatActivity {
 
         if (timeInfo == null){
             timeCount.createTimeRecord(username);
-            text_timeIn.setText(timeCount.nowTime());
-            text_AddIn.setText(timeCount.getAddress());
+            text_timeIn.setText(" 出勤時間：" + timeCount.nowTime());
+            text_AddIn.setText(" 出勤地点：" + timeCount.getAddress());
         }else{
-            timeCount.updateTimeRecord();
+            updateTimeinfo(timeInfo);
             text_timeIn.setText(" 出勤時間：" + timeCount.getTimeIn());
             text_AddIn.setText(" 出勤地点：" + timeCount.getAddress());
             text_timeOut.setText(" 退勤時間：" + timeCount.nowTime());
             text_AddOut.setText(" 退勤地点：" + timeCount.getAddress());
         }
+    }
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void updateTimeinfo(String objectId){
+        timeCount.updateTimeRecord(objectId);
     }
 }

@@ -6,7 +6,7 @@
         android:id="@+id/action_search"
         android:title="@string/action_search"
         android:icon="@drawable/search"
-        app:showAsAction="never"
+        app:showAsAction="always"
         android:inputType="textCapWords"
         android:imeOptions="actionSearch"
         app:actionViewClass="android.support.v7.widget.SearchView"
@@ -15,5 +15,5 @@
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:title="@string/action_settings"
-        app:showAsAction="never" />
+        app:showAsAction="always" />
 </menu>
