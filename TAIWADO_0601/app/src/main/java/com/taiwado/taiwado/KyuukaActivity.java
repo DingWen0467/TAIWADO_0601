@@ -3,6 +3,7 @@ package com.taiwado.taiwado;
 import android.icu.text.SimpleDateFormat;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -13,6 +14,9 @@ import android.widget.Toast;
 
 import java.util.Date;
 
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.SaveListener;
+
 import static com.taiwado.taiwado.R.array.kyuuka;
 import static com.taiwado.taiwado.R.array.time;
 
@@ -21,14 +25,33 @@ public class KyuukaActivity extends AppCompatActivity {
     private Spinner spinnerTimeIn;
     private Spinner spinnerTimeOut;
     private Spinner spinnerKyuuka;
+    private static String username = null;
+    private static String timeInValue = null;
+    private static String timeOutValue = null;
+    private static String holidayValue = null;
+    private static String holidayID = null;
+    private HolidayData holidayData = new HolidayData();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_kyuuka2);
+        username = getIntent().getStringExtra("username");
+        String date = setDate();
         TextView textTitle = (TextView)findViewById(R.id.kyuuka_title);
-        textTitle.setText("出勤予定-" + nowDate());
+        textTitle.setText("出勤予定-" + date);
         updateSpinnertime();
         updateKyuuka();
+    }
+    private String setDate(){
+        String str = null;
+        String date = nowDate();
+        if (getIntent().getStringExtra("main") != null){
+            str = date;
+        }else {
+            str = getIntent().getStringExtra("date");
+        }
+
+        return str;
     }
 
     public void doClick(View view){
@@ -63,9 +86,11 @@ public class KyuukaActivity extends AppCompatActivity {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void doClickOk(View v) {
         switch (v.getId()) {
             case R.id.kyuuka_ok:
+                createHolidayData(username,setDate(),setDay());
 
                 break;
 
@@ -73,6 +98,51 @@ public class KyuukaActivity extends AppCompatActivity {
                 break;
         }
 
+    }
+    public int setDay(){
+        int day = 0;
+        String str = null;
+        String strDay = null;
+        String date = nowDate();
+        if (getIntent().getStringExtra("main") != null){
+            str = date;
+        }else {
+            str = getIntent().getStringExtra("date");
+        }
+        str = str.substring(9,10);
+        day = Integer.valueOf(str).intValue();
+
+        return day;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void createHolidayData(String username, String date,int day) {
+        final String[] holidayobjectId = {null};
+        //day = (Integer) date.substring(1,1);
+        holidayData.setUsername(username);
+        holidayData.setDate(date);
+        holidayData.setDay(day);
+        if (timeInValue != null) {
+            holidayData.setTimeIn(timeInValue);
+        }
+        if (timeOutValue != null) {
+            holidayData.setTimeOut(timeOutValue);
+        }
+        if (holidayValue != null) {
+            holidayData.setHoliday("holiday");
+            holidayData.setHolidayType(holidayValue);
+        } else {
+            holidayData.setWork("work");
+        }
+        holidayData.save(new SaveListener<String>() {
+            @Override
+            public void done(String s, BmobException e) {
+                if (e == null) {
+                    holidayobjectId[0] = holidayData.getObjectId();
+                    holidayID = holidayobjectId[0];
+                }
+            }
+        });
     }
 
     public void doClickCanccel(View view) {
@@ -92,7 +162,7 @@ public class KyuukaActivity extends AppCompatActivity {
             @SuppressWarnings("WrongConstant")
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                //String timeInValue = (String)spinnerTimeIn.getItemAtPosition(position);
+                timeInValue = (String)spinnerTimeIn.getItemAtPosition(position);
                 //Toast.makeText(KyuukaActivity.this,"検索店舗：" +timeInItems[position], 2000).show();
                 if (spinnerKyuuka.getSelectedItemPosition() == 1) {
                     if (selectedTimeIn[0] != position && position != 0) {
@@ -119,6 +189,7 @@ public class KyuukaActivity extends AppCompatActivity {
         spinnerTimeOut.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                timeOutValue = (String)spinnerTimeIn.getItemAtPosition(position);
                 if (selectedTimeOut[0] != position && position != 0){
                     spinnerKyuuka.setSelection(0);
                     spinnerKyuuka.setEnabled(false);
@@ -142,6 +213,7 @@ public class KyuukaActivity extends AppCompatActivity {
         spinnerKyuuka.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                holidayValue = (String)spinnerTimeIn.getItemAtPosition(position);
                 if (selectedKyuuka[0] != position && position == 1){
                     spinnerTimeIn.setSelection(0);
                     spinnerTimeOut.setSelection(0);

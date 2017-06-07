@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_settings) {
             Intent intentKyuuka = new Intent(MainActivity.this,KyuukaActivity.class);
             intentKyuuka.putExtra("username",username);
-            intentKyuuka.putExtra("flag","main");
+            intentKyuuka.putExtra("main","main");
             startActivity(intentKyuuka);
             return true;
         }
@@ -107,7 +107,6 @@ public class MainActivity extends AppCompatActivity {
             case R.id.button_Shifuto:
                 Intent intentDate = new Intent(this, CalenderActivity.class);
                 intentDate.putExtra("username",username);
-
                 startActivity(intentDate);
                 break;
 

@@ -24,12 +24,14 @@ import java.util.Date;
 
 @RequiresApi(api = Build.VERSION_CODES.N)
 public class DateActivity extends LinearLayout {
+
     private ImageView buttonPrev,buttonNext;
     private TextView txtDate;
     private GridView calender_grid;
     private Calendar curDate = Calendar.getInstance();
     private String displayFormat;
     public NewCaledarListener Listener;
+    private static boolean isholiday = false;
 
     public DateActivity(Context context) {
         super(context);
@@ -52,7 +54,7 @@ public class DateActivity extends LinearLayout {
             String format = ta.getString(R.styleable.NewCalendar_dateFormat);
             displayFormat = format;
             if (displayFormat == null){
-                displayFormat = "MMM yyyy";
+                displayFormat = "yyyy年MM月dd日";
             }
         }
         finally {
@@ -124,17 +126,17 @@ public class DateActivity extends LinearLayout {
             super(context, R.layout.calendar_text_day,days);
             inflater = LayoutInflater.from(context);
         }
+
         public View getView(int position, View convertView, ViewGroup parent){
 
             Date date = getItem(position);
             if (convertView == null){
                 convertView = inflater.inflate(R.layout.calendar_text_day,parent,false);
             }
-
             int day = date.getDate();
             ((TextView)convertView).setText(String.valueOf(day));
-
             Date now = new Date();
+
             boolean isTheSameMonth = false;
             if (date.getMonth() == now.getMonth()) {
                 isTheSameMonth = true;
@@ -147,6 +149,10 @@ public class DateActivity extends LinearLayout {
 
             if (now.getDate() == date.getDate() && now.getMonth() == date.getMonth() && now.getYear() == date.getYear()){
                 ((TextView)convertView).setTextColor(Color.parseColor("#ff0000"));
+                ((Calendar_day_textView)convertView).isToday = true;
+            }
+            if(isholiday == true){
+                ((TextView)convertView).setTextColor(Color.parseColor("#ff0000"));
                 ((Calendar_day_textView)convertView).isHolidayALL = true;
             }
 
@@ -158,4 +164,5 @@ public class DateActivity extends LinearLayout {
         void onItemLongPress (Date day);
 
     }
+
 }

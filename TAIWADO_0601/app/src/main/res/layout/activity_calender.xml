@@ -10,7 +10,7 @@
         tools:layout_editor_absoluteY="8dp"
         tools:layout_editor_absoluteX="8dp"
         android:id="@+id/newCalendar"
-        NewCalendarNS:dateFormat="MMMM yyyy"
+        NewCalendarNS:dateFormat="yyyy年MM月dd日"
 
         >
     </com.taiwado.taiwado.DateActivity>
