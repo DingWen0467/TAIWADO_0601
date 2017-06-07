@@ -11,6 +11,8 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.idescout.sql.SqlScoutServer;
+
 import java.util.List;
 
 import cn.bmob.v3.Bmob;
@@ -34,6 +36,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        SqlScoutServer.create(this, getPackageName());
         CloseAllActivity.getInstance().addActivity(this);
         init();
         CheckSave.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){

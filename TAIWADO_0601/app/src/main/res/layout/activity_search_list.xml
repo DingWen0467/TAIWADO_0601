@@ -37,7 +37,9 @@
             android:paddingStart="1dp"
             android:paddingTop="1dp"
             android:text="2075"
-            android:textAlignment="center" />
+            android:textAlignment="center">
+            <requestFocus />
+        </EditText>
 
         <ImageView
             android:id="@+id/search_bar"

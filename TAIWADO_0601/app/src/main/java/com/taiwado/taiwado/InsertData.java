@@ -7,7 +7,7 @@ import android.widget.EditText;
 
 public class InsertData extends AppCompatActivity {
 
-    private DataInterface dbHelper;
+
     private static final String DATABASE_NAME = "Taiwado.db";
     private static final int DATABASE_VERSION = 4;
     private static final String TABLE_NAME = "HanbaiList";
@@ -26,10 +26,7 @@ public class InsertData extends AppCompatActivity {
     public void onClickOK(View v){
         switch (v.getId()) {
             case R.id.data_insert:
-                HanbaiRepo repo = new HanbaiRepo(this);
-                HanbaiData hanbaiData = new HanbaiData();
-                hanbaiData.ID = "";
-                hanbaiData.cname = "";
+
 
                 break;
 

@@ -118,7 +118,6 @@ public class DateActivity extends LinearLayout {
         });
     }
 
-
     private class CalendarAdapter extends ArrayAdapter<Date>{
         LayoutInflater inflater;
         public CalendarAdapter(@NonNull Context context, ArrayList<Date> days) {
@@ -148,7 +147,7 @@ public class DateActivity extends LinearLayout {
 
             if (now.getDate() == date.getDate() && now.getMonth() == date.getMonth() && now.getYear() == date.getYear()){
                 ((TextView)convertView).setTextColor(Color.parseColor("#ff0000"));
-                ((Calendar_day_textView)convertView).isToday = true;
+                ((Calendar_day_textView)convertView).isHolidayALL = true;
             }
 
             return convertView;

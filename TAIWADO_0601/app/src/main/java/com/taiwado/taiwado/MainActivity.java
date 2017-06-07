@@ -16,6 +16,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.idescout.sql.SqlScoutServer;
+
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
@@ -35,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        SqlScoutServer.create(this, getPackageName());
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         CloseAllActivity.getInstance().addActivity(this);
@@ -76,6 +79,8 @@ public class MainActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             Intent intentKyuuka = new Intent(MainActivity.this,KyuukaActivity.class);
+            intentKyuuka.putExtra("username",username);
+            intentKyuuka.putExtra("flag","main");
             startActivity(intentKyuuka);
             return true;
         }
@@ -101,6 +106,8 @@ public class MainActivity extends AppCompatActivity {
 
             case R.id.button_Shifuto:
                 Intent intentDate = new Intent(this, CalenderActivity.class);
+                intentDate.putExtra("username",username);
+
                 startActivity(intentDate);
                 break;
 

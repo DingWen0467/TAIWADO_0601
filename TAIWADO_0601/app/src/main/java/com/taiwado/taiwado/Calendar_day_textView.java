@@ -13,7 +13,11 @@ import android.util.AttributeSet;
 public class Calendar_day_textView extends android.support.v7.widget.AppCompatTextView {
 
     public boolean isToday = false;
+    public boolean isHolidayALL = false;
+    public boolean isHolidayAM  = false;
+    public boolean isHolidayPM  = false;
     private Paint paint = new Paint();
+    private Paint paintHoliday = new Paint();
 
     public  Calendar_day_textView(Context context) {
         super(context);
@@ -33,6 +37,11 @@ public class Calendar_day_textView extends android.support.v7.widget.AppCompatTe
 
         paint.setStyle(Paint.Style.STROKE);
         paint.setColor(Color.parseColor("#ff0000"));
+
+        paintHoliday.setStyle(Paint.Style.FILL_AND_STROKE);
+        paintHoliday.setColor(Color.parseColor("#ff0000"));
+        paintHoliday.setAlpha(100);
+
     }
 
     protected void onDraw(Canvas canvas) {
@@ -41,6 +50,16 @@ public class Calendar_day_textView extends android.support.v7.widget.AppCompatTe
         if (isToday) {
             canvas.translate(getWidth() /2 ,getHeight() / 2);
             canvas.drawCircle(0,0,getWidth() / 2,paint);
+        }
+        if (isHolidayALL){
+            canvas.translate(getWidth() /2 ,getHeight() / 2);
+            canvas.drawCircle(0,0,getWidth() / 2,paintHoliday);
+        }
+        if (isHolidayAM){
+
+        }
+        if (isHolidayPM){
+
         }
 
     }

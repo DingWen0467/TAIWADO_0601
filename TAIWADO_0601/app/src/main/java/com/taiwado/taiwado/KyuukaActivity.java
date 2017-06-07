@@ -50,8 +50,8 @@ public class KyuukaActivity extends AppCompatActivity {
                 //Toast.makeText(KyuukaActivity.this, "ok", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.text_kyuuka:
-                updateKyuuka();
                 spinnerKyuuka.setEnabled(true);
+                updateKyuuka();
                 spinnerTimeIn.setSelection(0);
                 spinnerTimeOut.setSelection(0);
                 spinnerTimeIn.setEnabled(false);
@@ -79,7 +79,7 @@ public class KyuukaActivity extends AppCompatActivity {
         Toast.makeText(KyuukaActivity.this, "取消", Toast.LENGTH_SHORT).show();
     }
 
-    public void updateSpinnertime(){
+    private void updateSpinnertime(){
         spinnerTimeIn =(Spinner)findViewById(R.id.search_timeIn);
         final String[] timeInItems = getResources().getStringArray(time);
         ArrayAdapter<String> adapterIn=new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, timeInItems);
@@ -87,14 +87,20 @@ public class KyuukaActivity extends AppCompatActivity {
         adapterIn.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerTimeIn .setAdapter(adapterIn);
         spinnerTimeIn.setSelection(4);
-        final int selectedTimeIn = spinnerTimeIn.getSelectedItemPosition();
+        final int[] selectedTimeIn = {spinnerTimeIn.getSelectedItemPosition()};
         spinnerTimeIn.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @SuppressWarnings("WrongConstant")
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 //String timeInValue = (String)spinnerTimeIn.getItemAtPosition(position);
                 //Toast.makeText(KyuukaActivity.this,"検索店舗：" +timeInItems[position], 2000).show();
-
+                if (spinnerKyuuka.getSelectedItemPosition() == 1) {
+                    if (selectedTimeIn[0] != position && position != 0) {
+                        spinnerKyuuka.setSelection(0);
+                        spinnerKyuuka.setEnabled(false);
+                    }
+                }
+                //selectedTimeIn[0] = position;
             }
 
             @Override
@@ -109,11 +115,14 @@ public class KyuukaActivity extends AppCompatActivity {
         adapterOut.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerTimeOut.setAdapter(adapterOut);
         spinnerTimeOut.setSelection(13);
-        final int selectedTimeOut = spinnerTimeOut.getSelectedItemPosition();
+        final int[] selectedTimeOut = {spinnerTimeOut.getSelectedItemPosition()};
         spinnerTimeOut.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
+                if (selectedTimeOut[0] != position && position != 0){
+                    spinnerKyuuka.setSelection(0);
+                    spinnerKyuuka.setEnabled(false);
+                }
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -122,17 +131,28 @@ public class KyuukaActivity extends AppCompatActivity {
         });
     }
 
-    public void updateKyuuka(){
+    private void updateKyuuka(){
         spinnerKyuuka = (Spinner)findViewById(R.id.search_kyuuka);
         final  String[] timeKyuukaItems = getResources().getStringArray(kyuuka);
         ArrayAdapter<String> adapterKyuuka = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item,timeKyuukaItems);
         adapterKyuuka.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerKyuuka.setAdapter(adapterKyuuka);
-        spinnerKyuuka.setSelection(1);
-        final int selectedKyuuka = spinnerKyuuka.getSelectedItemPosition();
+        spinnerKyuuka.setSelection(0);
+        final int[] selectedKyuuka = {spinnerKyuuka.getSelectedItemPosition()};
         spinnerKyuuka.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (selectedKyuuka[0] != position && position == 1){
+                    spinnerTimeIn.setSelection(0);
+                    spinnerTimeOut.setSelection(0);
+                    spinnerTimeIn.setEnabled(false);
+                    spinnerTimeOut.setEnabled(false);
+                }else {
+                    spinnerTimeIn.setSelection(4);
+                    spinnerTimeOut.setSelection(13);
+                    spinnerTimeIn.setEnabled(true);
+                    spinnerTimeOut.setEnabled(true);
+                }
             }
 
             @Override
