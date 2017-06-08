@@ -36,7 +36,7 @@ public class Calendar_day_textView extends android.support.v7.widget.AppCompatTe
     private void initControl(Context context){
 
         paint.setStyle(Paint.Style.STROKE);
-        paint.setColor(Color.parseColor("#ff0000"));
+        paint.setColor(Color.parseColor("#00ff00"));
 
         paintHoliday.setStyle(Paint.Style.FILL_AND_STROKE);
         paintHoliday.setColor(Color.parseColor("#ff0000"));

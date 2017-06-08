@@ -45,4 +45,11 @@ public class CloseAllActivity extends Application {
             System.exit(0);
         }
     }
+    public void finishActivity(Activity activity){
+        if(activity!=null){
+            activityList.remove(activity);
+            activity.finish();
+            activity=null;
+        }
+    }
 }

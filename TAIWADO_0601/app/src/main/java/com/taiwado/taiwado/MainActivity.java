@@ -16,9 +16,9 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.idescout.sql.SqlScoutServer;
-
 import java.util.Date;
+
+import cn.bmob.v3.Bmob;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,12 +32,13 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
     private long clickTime = 0; // 第一次点击的时间
     public TimeCount timeCount;
+    private HolidayRepo hrDay = new HolidayRepo();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        SqlScoutServer.create(this, getPackageName());
+        Bmob.initialize(this,"396d004b9ddb44265f799ad3d9c7ea5d");
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         CloseAllActivity.getInstance().addActivity(this);
@@ -49,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
         text_Now.setText(getNowMonth());
         timeCount = new TimeCount();
         timeCount.queryObjects(username);
-
+        hrDay.queryHoliday(username,"06");
     }
 
     @Override
@@ -105,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             case R.id.button_Shifuto:
+
                 Intent intentDate = new Intent(this, CalenderActivity.class);
                 intentDate.putExtra("username",username);
                 startActivity(intentDate);

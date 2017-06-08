@@ -1,6 +1,7 @@
 package com.taiwado.taiwado;
 
 import cn.bmob.v3.BmobObject;
+import cn.bmob.v3.datatype.BmobGeoPoint;
 
 /**
  * Created by tei on 2017/05/23.
@@ -15,7 +16,14 @@ public class UserInfo extends BmobObject{
     private String timeOutAddress;
     private  String timeDate;
     private String userNum;
+    private BmobGeoPoint gpsAdd;
 
+    public BmobGeoPoint getGpsAdd(){
+        return gpsAdd;
+    }
+    public void setUserName(BmobGeoPoint gpsAdd){
+        this.gpsAdd = gpsAdd;
+    }
 
     public String getUserNum() {
         return userNum;

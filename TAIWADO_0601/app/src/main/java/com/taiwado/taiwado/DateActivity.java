@@ -31,10 +31,12 @@ public class DateActivity extends LinearLayout {
     private Calendar curDate = Calendar.getInstance();
     private String displayFormat;
     public NewCaledarListener Listener;
+    private HolidayRepo holidayRepo = new HolidayRepo();
     private static boolean isholiday = false;
 
     public DateActivity(Context context) {
         super(context);
+
     }
     public DateActivity(Context context, AttributeSet attrs){
         super(context,attrs);
@@ -45,6 +47,7 @@ public class DateActivity extends LinearLayout {
         initControl(context,attrs);
     }
     private void initControl(Context context,AttributeSet attrs){
+
         bindControl(context);
         bindControlEvent();
 
@@ -148,14 +151,17 @@ public class DateActivity extends LinearLayout {
             }
 
             if (now.getDate() == date.getDate() && now.getMonth() == date.getMonth() && now.getYear() == date.getYear()){
-                ((TextView)convertView).setTextColor(Color.parseColor("#ff0000"));
+                ((TextView)convertView).setTextColor(Color.parseColor("#00ff00"));
                 ((Calendar_day_textView)convertView).isToday = true;
             }
-            if(isholiday == true){
-                ((TextView)convertView).setTextColor(Color.parseColor("#ff0000"));
-                ((Calendar_day_textView)convertView).isHolidayALL = true;
+            if (isTheSameMonth){
+                for (int i = 0; i <31; i++){
+                    if (HolidayRepo.Kyuuka[i] == day){
+                        ((TextView)convertView).setTextColor(Color.parseColor("#ff0000"));
+                        ((Calendar_day_textView)convertView).isHolidayALL = true;
+                    }
+                }
             }
-
             return convertView;
         }
 

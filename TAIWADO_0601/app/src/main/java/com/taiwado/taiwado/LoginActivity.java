@@ -16,6 +16,7 @@ import com.idescout.sql.SqlScoutServer;
 import java.util.List;
 
 import cn.bmob.v3.Bmob;
+import cn.bmob.v3.BmobConfig;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
@@ -27,6 +28,7 @@ public class LoginActivity extends AppCompatActivity {
     public static final int REQUEST_STOP = 0;
     public static final int REQUEST_LOGIN = 1;
 
+    public static String Bmob_AppId = "396d004b9ddb44265f799ad3d9c7ea5d";
     EditText etUserName, etUserPass;
     CheckBox CheckSave;
     SharedPreferences pref;
@@ -57,6 +59,14 @@ public class LoginActivity extends AppCompatActivity {
 
     public void init() {
         Bmob.initialize(this,"396d004b9ddb44265f799ad3d9c7ea5d");
+        BmobConfig config = new BmobConfig.Builder(this)
+                .setApplicationId("396d004b9ddb44265f799ad3d9c7ea5d")
+                .setConnectTimeout(30)
+                .setUploadBlockSize(1024*1024)
+                .setFileExpiration(2500)
+                .build();
+        Bmob.initialize(config);
+
         etUserName = (EditText) findViewById(R.id.etuserName);
         etUserPass = (EditText) findViewById(R.id.etuserpass);
         CheckSave = (CheckBox) findViewById(R.id.chkSaveName);
