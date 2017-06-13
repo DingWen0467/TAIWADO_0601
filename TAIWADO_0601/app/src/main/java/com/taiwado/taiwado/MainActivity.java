@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     public static boolean isCloseAll = false;
     public static final int REQUEST_STOP = 0;
     public static final int REQUEST_TIME = 2;
+    public static int ID = 0;
     public static String username = null;
     public static String ObjectId = null;
     public static String TimeReObjectID = null;

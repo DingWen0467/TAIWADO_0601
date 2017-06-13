@@ -2,8 +2,10 @@ package com.taiwado.taiwado;
 
 import android.app.Activity;
 import android.icu.text.SimpleDateFormat;
+import android.icu.util.Calendar;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.BaseAdapter;
@@ -120,5 +122,16 @@ public class BaseActivity extends Activity {
         UserInfo userInfo = new UserInfo();
         userInfo.setTimeINAddress(address);
 
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public int getDay(){
+        int day = 0;
+        Date date = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        day = cal.get(Calendar.DAY_OF_MONTH);
+
+        return day;
     }
 }

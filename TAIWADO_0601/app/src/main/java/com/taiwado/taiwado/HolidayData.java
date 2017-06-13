@@ -11,6 +11,8 @@ public class HolidayData extends BmobObject {
     private String username;
     private String  date;
     private int day;
+    private int ID;
+    private String month;
     private String holiday;
     private String holidayType;
     private String timeIn;
@@ -37,6 +39,21 @@ public class HolidayData extends BmobObject {
     }
     public void setDay(int day){
         this.day = day;
+    }
+    public String getMonth() {
+        return month;
+    }
+
+    public void setMonth(String month) {
+        this.month = month;
+    }
+
+    public int getID() {
+        return ID;
+    }
+
+    public void setID(int ID) {
+        this.ID = ID;
     }
 
     public String getHoliday(){

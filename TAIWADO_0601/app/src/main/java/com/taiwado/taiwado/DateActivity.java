@@ -22,6 +22,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Date;
 
+import static com.taiwado.taiwado.CalenderActivity.isHoliday;
+
 @RequiresApi(api = Build.VERSION_CODES.N)
 public class DateActivity extends LinearLayout {
 
@@ -31,8 +33,6 @@ public class DateActivity extends LinearLayout {
     private Calendar curDate = Calendar.getInstance();
     private String displayFormat;
     public NewCaledarListener Listener;
-    private HolidayRepo holidayRepo = new HolidayRepo();
-    private static boolean isholiday = false;
 
     public DateActivity(Context context) {
         super(context);
@@ -47,6 +47,7 @@ public class DateActivity extends LinearLayout {
         initControl(context,attrs);
     }
     private void initControl(Context context,AttributeSet attrs){
+        LocalDataRepo repo = new LocalDataRepo(context);
 
         bindControl(context);
         bindControlEvent();
@@ -155,13 +156,12 @@ public class DateActivity extends LinearLayout {
                 ((Calendar_day_textView)convertView).isToday = true;
             }
             if (isTheSameMonth){
-                for (int i = 0; i <31; i++){
-                    if (HolidayRepo.Kyuuka[i] == day){
-                        ((TextView)convertView).setTextColor(Color.parseColor("#ff0000"));
-                        ((Calendar_day_textView)convertView).isHolidayALL = true;
-                    }
+                if (isHoliday){
+                    ((TextView)convertView).setTextColor(Color.parseColor("#ff0000"));
+                    ((Calendar_day_textView)convertView).isHolidayALL = true;
                 }
             }
+
             return convertView;
         }
 
@@ -171,4 +171,7 @@ public class DateActivity extends LinearLayout {
 
     }
 
+    public void checkHoliday(){
+
+    }
 }

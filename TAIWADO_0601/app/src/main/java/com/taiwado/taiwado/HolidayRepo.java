@@ -16,9 +16,20 @@ import cn.bmob.v3.listener.UpdateListener;
 public class HolidayRepo extends BaseActivity{
 
     private String objectId;
+
     private String username;
     private String date;
     private int day;
+    private int ID;
+
+    public int getID() {
+        return ID;
+    }
+
+    public void setID(int ID) {
+        this.ID = ID;
+    }
+
     private String holiday;
     private String holidayType;
     private String timeIn;
@@ -120,6 +131,7 @@ public class HolidayRepo extends BaseActivity{
 
                     for (HolidayData holidayData : object) {
                         setDay(holidayData.getDay());
+                        setID(holidayData.getID());
                         setObjectId(holidayData.getObjectId());
                         setHoliday(holidayData.getHoliday());
                         setDate(holidayData.getDate());
