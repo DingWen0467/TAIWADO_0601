@@ -12,13 +12,16 @@ import android.widget.Toast;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
-import static com.taiwado.taiwado.MainActivity.ObjectId;
 import static com.taiwado.taiwado.MainActivity.username;
 
 public class CalenderActivity extends AppCompatActivity implements DateActivity.NewCaledarListener {
     public static boolean isHoliday = false;
+    public static String[] Kyuuka = new String[50];
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,23 +30,15 @@ public class CalenderActivity extends AppCompatActivity implements DateActivity.
         DateActivity calendar = (DateActivity) findViewById(R.id.newCalendar);
         calendar.Listener = this;
         username = getIntent().getStringExtra("username");
-
         LocalDataRepo repo = new LocalDataRepo(this);
         LocalData localData = new LocalData();
-        //localData = repo.getLocalDataByID(ObjectId,getMonth(),getDay());
-        //checkWork(localData);
 
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public void checkWork(LocalData localData){
-        if (localData.objectID == ObjectId && localData.day == getDay() && localData.month == getMonth()){
-            if (localData.holiday == null){
-                isHoliday = false;
-            }else {
-                isHoliday = true;
-            }
-        }
+        ArrayList<HashMap<String, String>> localdatalist =  repo.getLocaldataList(username,getMonth(),getYear());
+        for (HashMap<String,String> map : localdatalist)
+            for (Map.Entry<String, String> entry : map.entrySet())
+                if (entry.getKey() != "" && entry.getValue() != "") {
+                    Kyuuka[Integer.parseInt(entry.getKey())] = entry.getValue();
+                }
     }
 
     @Override
@@ -60,6 +55,7 @@ public class CalenderActivity extends AppCompatActivity implements DateActivity.
         intentKyuuka.putExtra("username",username);
         intentKyuuka.putExtra("calendar","calendar");
         startActivity(intentKyuuka);
+        CalenderActivity.this.finish();
     }
 
     public String nowDate(Date day) {
@@ -106,4 +102,16 @@ public class CalenderActivity extends AppCompatActivity implements DateActivity.
         }
         return nowDate;
     }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public String getYear(){
+        String str = null;
+        Date date = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        str = String.valueOf(cal.get(Calendar.YEAR));
+
+        return str;
+    }
+
 }

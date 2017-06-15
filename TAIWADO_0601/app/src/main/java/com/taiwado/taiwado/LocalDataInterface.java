@@ -13,7 +13,7 @@ public class LocalDataInterface extends SQLiteOpenHelper {
     //数据库版本号
     private static final int DATABASE_VERSION=4;
     //数据库名称
-    private static final String DATABASE_NAME="TAIWADO.db";
+    private static final String DATABASE_NAME="TAIWADO617.db";
 
     public LocalDataInterface(Context context) {
         super(context,DATABASE_NAME,null,DATABASE_VERSION);
@@ -31,6 +31,7 @@ public class LocalDataInterface extends SQLiteOpenHelper {
                 +LocalData.KEY_TIMEOUT+" TEXT, "
                 +LocalData.KEY_DAY+" INTEGER, "
                 +LocalData.KEY_MONTH+" TEXT, "
+                +LocalData.KEY_YEAR+" TEXT, "
                 +LocalData.KEY_DATE+" TEXT, "
                 +LocalData.KEY_HOLIDAY+" TEXT, "
                 +LocalData.KEY_HOLIDAYTYPE+" TEXT, "

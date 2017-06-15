@@ -47,21 +47,15 @@ public class Calendar_day_textView extends android.support.v7.widget.AppCompatTe
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        if (isToday) {
-            canvas.translate(getWidth() /2 ,getHeight() / 2);
-            canvas.drawCircle(0,0,getWidth() / 2,paint);
-        }
         if (isHolidayALL){
-            canvas.translate(getWidth() /2 ,getHeight() / 2);
-            canvas.drawCircle(0,0,getWidth() / 2,paintHoliday);
+            canvas.translate(getWidth() / 2, getHeight() / 2);
+            canvas.drawCircle(0, 0, getWidth() / 2, paintHoliday);
+        }else {
+            if (isToday){
+                canvas.translate(getWidth() /2 ,getHeight() / 2);
+                canvas.drawCircle(0,0,getWidth() / 2,paint);
+            }
         }
-        if (isHolidayAM){
-
-        }
-        if (isHolidayPM){
-
-        }
-
     }
 }
 

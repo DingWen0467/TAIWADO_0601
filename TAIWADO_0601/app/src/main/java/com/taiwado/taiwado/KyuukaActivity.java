@@ -1,11 +1,11 @@
 package com.taiwado.taiwado;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.icu.text.SimpleDateFormat;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -59,8 +59,9 @@ public class KyuukaActivity extends BaseActivity {
         LocalDataRepo repo = new LocalDataRepo(this);
         LocalData localData = new LocalData();
 
-        localData = repo.getLocalDataByID(MainActivity.ID);
-        repo.getLocaldataList(username,nowDate(),getMonth());
+        //localData = repo.getLocalDataByID(MainActivity.ID);
+        //repo.getLocaldataList(username,getDay(),getMonth(),getYear());
+
     }
     private void init(){
         username = null;
@@ -142,54 +143,16 @@ public class KyuukaActivity extends BaseActivity {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (holidayID != null){
-
-                createLocalData();
-            }
-            onBackPressed();
-        }
-        return false;
-    }
-
-    public String getAutoID(){
-
-        String str = null;
-        pref = getSharedPreferences("AUTOID",MODE_PRIVATE);
-        edtior = pref.edit();
-        str = pref.getString("AUTOID","");
-
-        return str;
-    }
-
-    public int setAutoID(){
-        int autoID = 0;
-        String str =  getAutoID();
-
-        if (str == ""){
-            autoID = 1;
-        }else {
-            autoID = Integer.parseInt(str) +1;
-        }
-
-        String ID = String.valueOf(autoID);
-        edtior.putString("AUTOID",ID);
-        edtior.commit();
-
-        return autoID;
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public void createLocalData(){
+    public int createLocalData(){
 
         LocalDataRepo repo = new LocalDataRepo(this);
         LocalData localData = new LocalData();
-        localData.ID = ID;
+        localData.ID = setAutoID();
         localData.objectID = ObjectId;
         localData.uname = username;
         localData.day = setDay();
         localData.month = getMonth();
+        localData.year = getYear();
         localData.date = nowDate();
         localData.timein = timeInValue;
         localData.timeout = timeOutValue;
@@ -207,7 +170,7 @@ public class KyuukaActivity extends BaseActivity {
             localData.holidaytype = holidayValue;
         }
 
-        repo.insertData(localData);
+        return repo.insertData(localData);
 
     }
 
@@ -282,7 +245,7 @@ public class KyuukaActivity extends BaseActivity {
 
         holidayData.setUsername(username);
         holidayData.setDate(date);
-        holidayData.setID(setAutoID());
+        holidayData.setID(createLocalData());
         holidayData.setMonth(getMonth());
         holidayData.setDay(day);
         if (timeInValue != "") {
@@ -444,6 +407,36 @@ public class KyuukaActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         CloseAllActivity.getInstance().finishActivity(this);
+        Intent intentCalendar = new Intent(this,CalenderActivity.class);
+        startActivity(intentCalendar);
+    }
+
+
+    public String getAutoID(){
+
+        String str = null;
+        pref = getSharedPreferences("AUTOId",MODE_PRIVATE);
+        edtior = pref.edit();
+        str = pref.getString("AUTOId","");
+
+        return str;
+    }
+
+    public int setAutoID(){
+        int autoID = 0;
+        String str =  getAutoID();
+
+        if (str == ""){
+            autoID = 1;
+        }else {
+            autoID = Integer.parseInt(str) +1;
+        }
+
+        String ID = String.valueOf(autoID);
+        edtior.putString("AUTOId",ID);
+        edtior.commit();
+
+        return autoID;
     }
 
 }

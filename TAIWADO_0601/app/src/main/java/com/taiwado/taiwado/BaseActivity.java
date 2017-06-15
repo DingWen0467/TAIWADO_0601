@@ -134,4 +134,14 @@ public class BaseActivity extends Activity {
 
         return day;
     }
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public String getYear(){
+        String str = null;
+        Date date = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        str = String.valueOf(cal.get(Calendar.YEAR));
+
+        return str;
+    }
 }

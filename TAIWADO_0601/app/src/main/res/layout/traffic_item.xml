@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <TextView
+        android:id="@+id/date"
+        android:text="dd"
+        android:layout_width="30dp"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:textSize="18sp"
+        android:layout_weight="1"
+        android:layout_gravity="center_vertical"
+        android:textColor="@android:color/black" />
+
+    <TextView
+        android:id="@+id/begin"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_weight="5"
+        android:gravity="center_vertical"
+        android:hint="please"
+        android:scrollbars="vertical"
+        android:textColor="@android:color/black"
+        android:textColorHint="@android:color/darker_gray"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/end"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_weight="5"
+        android:gravity="center_vertical"
+        android:hint="please"
+        android:scrollbars="vertical"
+        android:textColor="@android:color/black"
+        android:textColorHint="@android:color/darker_gray"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/cash"
+        android:layout_width="30dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_weight="5"
+        android:gravity="center_vertical"
+        android:hint="please"
+        android:scrollbars="vertical"
+        android:textColor="@android:color/black"
+        android:textColorHint="@android:color/darker_gray"
+        android:textSize="18sp" />
+
+</LinearLayout>

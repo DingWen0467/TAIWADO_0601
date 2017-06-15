@@ -20,7 +20,7 @@ public class LocalDataRepo {
     }
 
     //ID,uname,date,month,day,holiday,holidayType
-    public void insertData(LocalData localData){
+    public int insertData(LocalData localData){
 
         // 调用getWritableDatabase()方法创建或打开一个可以读的数据库
         SQLiteDatabase  db = dbHelper.getWritableDatabase();
@@ -35,6 +35,7 @@ public class LocalDataRepo {
         values1.put(LocalData.KEY_DAY,localData.day);
         values1.put(LocalData.KEY_DATE,localData.date);
         values1.put(LocalData.KEY_MONTH,localData.month);
+        values1.put(LocalData.KEY_YEAR,localData.year);
         values1.put(LocalData.KEY_HOLIDAY,localData.holiday);
         values1.put(LocalData.KEY_HOLIDAYTYPE,localData.holidaytype);
         values1.put(LocalData.KEY_WORK,localData.work);
@@ -44,9 +45,10 @@ public class LocalDataRepo {
 
         //关闭数据库
         db.close();
+        return (int)localData.ID;
         }
 
-    public void updateHoliday(LocalData localData){
+    public void updateLocalData(LocalData localData){
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(LocalData.KEY_TIMEIN,localData.timein);
@@ -70,6 +72,7 @@ public class LocalDataRepo {
                 LocalData.KEY_TIMEOUT + "," +
                 LocalData.KEY_DAY + "," +
                 LocalData.KEY_MONTH + "," +
+                LocalData.KEY_YEAR + "," +
                 LocalData.KEY_DATE + "," +
                 LocalData.KEY_HOLIDAY + "," +
                 LocalData.KEY_HOLIDAYTYPE + "," +
@@ -90,6 +93,7 @@ public class LocalDataRepo {
                 localData.timeout = cursor.getString(cursor.getColumnIndex(LocalData.KEY_TIMEOUT));
                 localData.day = cursor.getInt(cursor.getColumnIndex(LocalData.KEY_DAY));
                 localData.month = cursor.getString(cursor.getColumnIndex(LocalData.KEY_MONTH));
+                localData.year = cursor.getString(cursor.getColumnIndex(LocalData.KEY_YEAR));
                 localData.date = cursor.getString(cursor.getColumnIndex(LocalData.KEY_DATE));
                 localData.holiday = cursor.getString(cursor.getColumnIndex(LocalData.KEY_HOLIDAY));
                 localData.holidaytype = cursor.getString(cursor.getColumnIndex(LocalData.KEY_HOLIDAYTYPE));
@@ -104,7 +108,7 @@ public class LocalDataRepo {
         return localData;
     }
 
-    public ArrayList<HashMap<String, String>> getLocaldataList(String username , String month, String date){
+    public ArrayList<HashMap<String, String>> getLocaldataList(String username,String month, String year){
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         String selectQuery = "SELECT "+
                 LocalData.KEY_ID + "," +
@@ -114,6 +118,7 @@ public class LocalDataRepo {
                 LocalData.KEY_TIMEOUT + "," +
                 LocalData.KEY_DAY + "," +
                 LocalData.KEY_MONTH + "," +
+                LocalData.KEY_YEAR + "," +
                 LocalData.KEY_DATE + "," +
                 LocalData.KEY_HOLIDAY + "," +
                 LocalData.KEY_HOLIDAYTYPE + "," +
@@ -121,19 +126,20 @@ public class LocalDataRepo {
                 " FROM " + LocalData.TABLE
                 + " WHERE " +
                 LocalData.KEY_UNAME + "=? and " +
-                LocalData.KEY_DATE + "=? and " +
-                LocalData.KEY_MONTH + "=? "
+                LocalData.KEY_MONTH + "=? and " +
+                LocalData.KEY_YEAR + "=? "
                 ;
 
         ArrayList<HashMap<String,String>> localdatalist = new ArrayList<HashMap<String, String>>();
-        Cursor cursor = db.rawQuery(selectQuery,new String[]{String.valueOf(username),String.valueOf(date),String.valueOf(month)});
-
+        Cursor cursor = db.rawQuery(selectQuery,new String[]{String.valueOf(username),String.valueOf(month),String.valueOf(year)});
+        int count = 1;
         if(cursor.moveToFirst()){
             do{
                 HashMap<String,String> hashData = new HashMap<String,String>();
-                hashData.put("day", String.valueOf(cursor.getInt(cursor.getColumnIndex(LocalData.KEY_DAY))));
-                hashData.put("holiday",cursor.getString(cursor.getColumnIndex(LocalData.KEY_HOLIDAY)));
+                hashData.put(String.valueOf(cursor.getInt(cursor.getColumnIndex(LocalData.KEY_DAY))), cursor.getString(cursor.getColumnIndex(LocalData.KEY_HOLIDAYTYPE)));
+                //hashData.put(cursor.getString(cursor.getColumnIndex(LocalData.KEY_UNAME)),String.valueOf(cursor.getString(cursor.getColumnIndex(LocalData.KEY_ID))));
                 localdatalist.add(hashData);
+                count ++;
             }while(cursor.moveToNext());
         }
         cursor.close();
@@ -141,5 +147,5 @@ public class LocalDataRepo {
 
         return localdatalist;
     }
-    }
+}
 

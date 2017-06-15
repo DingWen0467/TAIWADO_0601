@@ -114,8 +114,10 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             case R.id.button_Tsukinhi:
-                Intent intentTsukinhi = new Intent(this, TrafficListActivity.class);
-                startActivity(intentTsukinhi);
+                //Intent intentTsukinhi = new Intent(this, TrafficListActivity.class);
+                //startActivity(intentTsukinhi);
+                Intent intentSaveTsukinhi = new Intent(this,TrafficSaveActivity.class);
+                startActivity(intentSaveTsukinhi);
                 break;
 
             case R.id.button_Uriage:

@@ -16,7 +16,8 @@
     <string name="title_activity_insert_data">InsertDataActivity</string>
     <string name="title_activity_hanbai_list">HanbaiList</string>
     <string name="title_activity_kyuuka">Kyuuka</string>
-
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="title_activity_traffic_save">TrafficSaveActivity</string>
+    <string name="traffic_search">traffic_search</string>
 </resources>

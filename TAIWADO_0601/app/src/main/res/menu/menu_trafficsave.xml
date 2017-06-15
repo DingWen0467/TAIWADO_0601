@@ -1,12 +1,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.taiwado.taiwado.HanbaiList">
+    tools:context="com.taiwado.taiwado.TrafficSaveActivity">
 
     <item
-        android:id="@+id/action_plus"
+        android:id="@+id/traffic_search"
         android:orderInCategory="100"
-        android:icon="@drawable/plus"
-        android:title="@string/action_plus"
+        android:icon="@drawable/search"
+        android:title="@string/traffic_search"
         app:showAsAction="always" />
 </menu>

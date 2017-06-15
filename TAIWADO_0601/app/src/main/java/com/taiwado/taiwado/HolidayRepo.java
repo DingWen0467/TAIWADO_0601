@@ -36,7 +36,7 @@ public class HolidayRepo extends BaseActivity{
     private String timeOut;
     private String work;
     private String workType;
-    public static int[] Kyuuka = new int[50];
+    //public static int[] Kyuuka = new int[50];
 
 
     public String getObjectId(){
@@ -195,7 +195,7 @@ public class HolidayRepo extends BaseActivity{
                     for (HolidayData holidayData : object) {
                         setDay(holidayData.getDay());
                         setObjectId(holidayData.getObjectId());
-                        Kyuuka[i] = holidayData.getDay();
+                        //Kyuuka[i] = holidayData.getDay();
                         i++;
                     }
                 }else{

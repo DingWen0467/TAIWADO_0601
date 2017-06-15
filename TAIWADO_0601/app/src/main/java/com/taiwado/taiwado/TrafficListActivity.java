@@ -1,23 +1,29 @@
 package com.taiwado.taiwado;
 
-import android.app.Activity;
+import android.app.ListActivity;
 import android.icu.text.SimpleDateFormat;
+import android.icu.util.Calendar;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.TableLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
-public class TrafficListActivity extends Activity {
+import static com.taiwado.taiwado.MainActivity.username;
+
+public class TrafficListActivity extends ListActivity {
     private Spinner spinner;
     private TableLayout trafficTable;
+    private SimpleAdapter adapter;
 
     private final int WC = ViewGroup.LayoutParams.WRAP_CONTENT;
     private final int MP = ViewGroup.LayoutParams.MATCH_PARENT;
@@ -37,6 +43,7 @@ public class TrafficListActivity extends Activity {
         position = getPosition();
         spinner.setSelection(position);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @SuppressWarnings("WrongConstant")
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -52,45 +59,17 @@ public class TrafficListActivity extends Activity {
             }
         });
     }
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void tableLoad(String selecctMonth){
 
-        String nowMonth = null;
-        int rows = 0;
+        TrafficDataRepo repo = new TrafficDataRepo(this);
+        ArrayList<HashMap<String, String>> trafficDataList =  repo.getTrafficDataList(username,selecctMonth,getYear());
 
-        nowMonth = getNowMonth();
-        if (nowMonth == selecctMonth) {
-            rows = getRows(nowMonth);
-            TextView table_month = (TextView)findViewById(R.id.table_header_month);
-            table_month.setText(nowMonth);
-        }
-        else {
-            rows = getRows(selecctMonth);
-            TextView table_month = (TextView)findViewById(R.id.table_header_month);
-            table_month.setText(selecctMonth);
-        }
-
-        trafficTable = (TableLayout)findViewById(R.id.traffic_table_body);
-
-        if (rows != 0) {
-            trafficTable.removeAllViewsInLayout();
-        }
-        trafficTable.setStretchAllColumns(true);
-
-        for (int i = 0; i <rows; i++){
-            //TableRow tableRow = new TableRow(getBaseContext());
-            TableRow tableRow = new TableRow(TrafficListActivity.this);
-            for (int j = 0; j < 4; j++){
-                //TextView textView = new TextView(getBaseContext());
-                TextView textView = new TextView(TrafficListActivity.this);
-                //textView.setBackgroundResource(R.drawable.shape);
-                //textView.setPadding(1,1,1,1);
-                textView.setText("(" +i+","+j+")");
-                tableRow.addView(textView,j);
-            }
-            trafficTable.addView(tableRow,new TableLayout.LayoutParams(MP,WC,1));
-        }
+        adapter = new SimpleAdapter(this,trafficDataList,R.layout.traffic_item,new String[]{"date","begin","end","cash"},new int[]{R.id.date,R.id.begin,R.id.end,R.id.cash});
+        setListAdapter(adapter);
 
     }
+
     public String getNowMonth() {
         //取得当前系统日期
         String month = null;
@@ -173,5 +152,16 @@ public class TrafficListActivity extends Activity {
                 break;
         }
         return  position;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public String getYear(){
+        String str = null;
+        Date date = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        str = String.valueOf(cal.get(Calendar.YEAR));
+
+        return str;
     }
 }
