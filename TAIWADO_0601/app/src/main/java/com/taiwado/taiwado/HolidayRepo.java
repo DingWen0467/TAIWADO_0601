@@ -16,34 +16,29 @@ import cn.bmob.v3.listener.UpdateListener;
 public class HolidayRepo extends BaseActivity{
 
     private String objectId;
-
     private String username;
     private String date;
     private int day;
     private int ID;
-
-    public int getID() {
-        return ID;
-    }
-
-    public void setID(int ID) {
-        this.ID = ID;
-    }
-
     private String holiday;
     private String holidayType;
     private String timeIn;
     private String timeOut;
     private String work;
     private String workType;
-    //public static int[] Kyuuka = new int[50];
-
 
     public String getObjectId(){
         return this.objectId;
     }
     public void setObjectId(String objectId){
         this.objectId = objectId;
+    }
+
+    public int getID() {
+        return ID;
+    }
+    public void setID(int ID) {
+        this.ID = ID;
     }
 
     public String getUsername(){
@@ -115,13 +110,7 @@ public class HolidayRepo extends BaseActivity{
         bmobQuery.addWhereEqualTo("day",day);
         bmobQuery.setLimit(2);
         bmobQuery.order("createdAt");
-        //先判断是否有缓存
-        boolean isCache = bmobQuery.hasCachedResult(HolidayData.class);
-        //if(isCache){
-        //bmobQuery.setCachePolicy(BmobQuery.CachePolicy.CACHE_ELSE_NETWORK);	// 先从缓存取数据，如果没有的话，再从网络取。
-        //}else{
         bmobQuery.setCachePolicy(BmobQuery.CachePolicy.NETWORK_ELSE_CACHE);	// 如果没有缓存的话，则先从网络中取
-        //}
 
         bmobQuery.findObjects(new FindListener<HolidayData>() {
 
@@ -147,10 +136,10 @@ public class HolidayRepo extends BaseActivity{
         });
     }
 
-    public void updateHolidayData(String objectId,String holiday,String holidayType,String timeIn,String timeOut,String work,int day) {
+    public void updateHolidayData(String objectId,int ID,String holiday,String holidayType,String timeIn,String timeOut,String work,int day) {
 
         HolidayData holidayData = new HolidayData();
-
+        holidayData.setID(ID);
         holidayData.setHoliday(holiday);
         holidayData.setHolidayType(holidayType);
         holidayData.setTimeIn(timeIn);

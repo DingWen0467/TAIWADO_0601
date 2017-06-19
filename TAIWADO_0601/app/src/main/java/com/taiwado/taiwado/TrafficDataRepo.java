@@ -46,13 +46,25 @@ public class TrafficDataRepo {
         return (int)trafficData.ID;
     }
 
-    public void updateTrafficData(TrafficData TrafficData){
+    public void updateTrafficData(TrafficData trafficData){
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(TrafficData.KEY_BEGIN,TrafficData.begin);
-        values.put(TrafficData.KEY_END,TrafficData.end);;
+        values.put(TrafficData.KEY_DAY,trafficData.day);
+        values.put(TrafficData.KEY_BEGIN,trafficData.begin);
+        values.put(TrafficData.KEY_END,trafficData.end);
+        values.put(TrafficData.KEY_CASH,trafficData.cash);
+        values.put(TrafficData.KEY_DATE,trafficData.date);
 
-        db.update(TrafficData.TABLE,values,TrafficData.KEY_ID+"=? and ",new String[] {String.valueOf(TrafficData.ID)});
+        db.update(TrafficData.TABLE,values,TrafficData.KEY_ID+"=?",new String[] {String.valueOf(trafficData.ID)});
+        db.close();
+    }
+
+    public void updateTrafficID(String trafficObjectID,int ID){
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(TrafficData.KEY_OBID,trafficObjectID);
+
+        db.update(TrafficData.TABLE,values,TrafficData.KEY_ID+"=?",new String[] {String.valueOf(ID)});
         db.close();
     }
 
@@ -127,10 +139,10 @@ public class TrafficDataRepo {
                 HashMap<String,String> hashData = new HashMap<String,String>();
                 //hashData.put(cursor.getString(cursor.getColumnIndex(TrafficData.KEY_DAY)),cursor.getString(cursor.getColumnIndex(TrafficData.KEY_FROM)) + "--→" + cursor.getString(cursor.getColumnIndex(TrafficData.KEY_TO)) + "    " + cursor.getString(cursor.getColumnIndex(TrafficData.KEY_CASH)));
                 //hashData.put(String.valueOf(count),cursor.getString(cursor.getColumnIndex(TrafficData.KEY_CASH)));
-                hashData.put("date",cursor.getString(cursor.getColumnIndex(TrafficData.KEY_DAY)));
-                hashData.put("begin",cursor.getString(cursor.getColumnIndex(TrafficData.KEY_BEGIN)));
-                hashData.put("end",cursor.getString(cursor.getColumnIndex(TrafficData.KEY_END)));
-                hashData.put("cash",cursor.getString(cursor.getColumnIndex(TrafficData.KEY_CASH)));
+                hashData.put("date",cursor.getString(cursor.getColumnIndex(TrafficData.KEY_DAY)) + " 日");
+                hashData.put("begin", "      " + cursor.getString(cursor.getColumnIndex(TrafficData.KEY_BEGIN)));
+                hashData.put("end", "      " + cursor.getString(cursor.getColumnIndex(TrafficData.KEY_END)));
+                hashData.put("cash", "   " + cursor.getString(cursor.getColumnIndex(TrafficData.KEY_CASH)));
                 trafficDatalist.add(hashData);
                 count ++;
             }while(cursor.moveToNext());
@@ -139,5 +151,115 @@ public class TrafficDataRepo {
         db.close();
 
         return trafficDatalist;
+    }
+
+    public String getMonthCash(String username, String month, String year){
+        String monthCash = null;
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        String selectQuery = "SELECT "+
+                TrafficData.KEY_ID + "," +
+                TrafficData.KEY_OBID + "," +
+                TrafficData.KEY_UNAME + "," +
+                TrafficData.KEY_BEGIN + "," +
+                TrafficData.KEY_END + "," +
+                TrafficData.KEY_CASH + "," +
+                TrafficData.KEY_DAY + "," +
+                TrafficData.KEY_MONTH + "," +
+                TrafficData.KEY_YEAR + "," +
+                TrafficData.KEY_DATE +
+                " FROM " + TrafficData.TABLE
+                + " WHERE " +
+                TrafficData.KEY_UNAME + "=? and " +
+                TrafficData.KEY_MONTH + "=? and " +
+                TrafficData.KEY_YEAR + "=? "
+                ;
+
+        Cursor cursor = db.rawQuery(selectQuery,new String[]{String.valueOf(username),String.valueOf(month),String.valueOf(year)});
+        int count = 0;
+        if(cursor.moveToFirst()){
+            do{
+                count = cursor.getInt(cursor.getColumnIndex(TrafficData.KEY_CASH)) + count;
+            }while(cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+
+        monthCash = String.valueOf(count);
+
+        return monthCash;
+    }
+
+    public int getTrafficID(String username,String month,String year,String day,String begin,String end, String cash){
+        int trafficid = 0;
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        String selectQuery = "SELECT "+
+                TrafficData.KEY_ID + "," +
+                TrafficData.KEY_OBID + "," +
+                TrafficData.KEY_UNAME + "," +
+                TrafficData.KEY_BEGIN + "," +
+                TrafficData.KEY_END + "," +
+                TrafficData.KEY_CASH + "," +
+                TrafficData.KEY_DAY + "," +
+                TrafficData.KEY_MONTH + "," +
+                TrafficData.KEY_YEAR + "," +
+                TrafficData.KEY_DATE +
+                " FROM " + TrafficData.TABLE
+                + " WHERE " +
+                TrafficData.KEY_UNAME + "=? and " +
+                TrafficData.KEY_DAY + "=? and " +
+                TrafficData.KEY_MONTH + "=? and " +
+                TrafficData.KEY_YEAR + "=? and " +
+                TrafficData.KEY_BEGIN + "=? and " +
+                TrafficData.KEY_END + "=? and " +
+                TrafficData.KEY_CASH + "=? "
+                ;
+
+        Cursor cursor = db.rawQuery(selectQuery,new String[]{String.valueOf(username),String.valueOf(day),String.valueOf(month),String.valueOf(year),String.valueOf(begin),String.valueOf(end),String.valueOf(cash)});
+        if(cursor.moveToFirst()){
+            do{
+                trafficid = cursor.getInt(cursor.getColumnIndex(TrafficData.KEY_ID));
+            }while(cursor.moveToNext());
+        }
+        return trafficid;
+    }
+
+    public String getTrafficObjectID(String username,String month,String year,String day,String begin,String end, String cash){
+        String trafficObjectid = null;
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        String selectQuery = "SELECT "+
+                TrafficData.KEY_ID + "," +
+                TrafficData.KEY_OBID + "," +
+                TrafficData.KEY_UNAME + "," +
+                TrafficData.KEY_BEGIN + "," +
+                TrafficData.KEY_END + "," +
+                TrafficData.KEY_CASH + "," +
+                TrafficData.KEY_DAY + "," +
+                TrafficData.KEY_MONTH + "," +
+                TrafficData.KEY_YEAR + "," +
+                TrafficData.KEY_DATE +
+                " FROM " + TrafficData.TABLE
+                + " WHERE " +
+                TrafficData.KEY_UNAME + "=? and " +
+                TrafficData.KEY_DAY + "=? and " +
+                TrafficData.KEY_MONTH + "=? and " +
+                TrafficData.KEY_YEAR + "=? and " +
+                TrafficData.KEY_BEGIN + "=? and " +
+                TrafficData.KEY_END + "=? and " +
+                TrafficData.KEY_CASH + "=? "
+                ;
+
+        Cursor cursor = db.rawQuery(selectQuery,new String[]{String.valueOf(username),String.valueOf(day),String.valueOf(month),String.valueOf(year),String.valueOf(begin),String.valueOf(end),String.valueOf(cash)});
+        if(cursor.moveToFirst()){
+            do{
+                trafficObjectid = cursor.getString(cursor.getColumnIndex(TrafficData.KEY_OBID));
+            }while(cursor.moveToNext());
+        }
+        return trafficObjectid;
+    }
+
+    public void delete(int ID){
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.delete(TrafficData.TABLE,TrafficData.KEY_ID+"=?", new String[]{String.valueOf(ID)});
+        db.close();
     }
 }

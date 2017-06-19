@@ -48,19 +48,29 @@ public class LocalDataRepo {
         return (int)localData.ID;
         }
 
-    public void updateLocalData(LocalData localData){
+    public void updateLocalHoliday(LocalData localData){
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(LocalData.KEY_TIMEIN,localData.timein);
         values.put(LocalData.KEY_TIMEOUT,localData.timeout);
         values.put(LocalData.KEY_HOLIDAY,localData.holiday);
         values.put(LocalData.KEY_HOLIDAYTYPE,localData.holidaytype);
-        values.put(LocalData.KEY_WORK,localData.work);
 
-        db.update(LocalData.TABLE,values,LocalData.KEY_ID+"=? and ",new String[] {String.valueOf(localData.ID)});
+        db.update(LocalData.TABLE,values,LocalData.KEY_ID+"=?",new String[] {String.valueOf(localData.ID)});
         db.close();
         }
 
+    public void updateLocalWork(LocalData localData){
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(LocalData.KEY_TIMEIN,localData.timein);
+        values.put(LocalData.KEY_TIMEOUT,localData.timeout);
+        values.put(LocalData.KEY_WORK,"work");
+        values.put(LocalData.KEY_HOLIDAY,"");
+        values.put(LocalData.KEY_HOLIDAYTYPE,"");
+        db.update(LocalData.TABLE,values,LocalData.KEY_ID+"=?",new String[] {String.valueOf(localData.ID)});
+        db.close();
+    }
     public LocalData getLocalDataByID(int id){
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -135,11 +145,13 @@ public class LocalDataRepo {
         int count = 1;
         if(cursor.moveToFirst()){
             do{
-                HashMap<String,String> hashData = new HashMap<String,String>();
-                hashData.put(String.valueOf(cursor.getInt(cursor.getColumnIndex(LocalData.KEY_DAY))), cursor.getString(cursor.getColumnIndex(LocalData.KEY_HOLIDAYTYPE)));
-                //hashData.put(cursor.getString(cursor.getColumnIndex(LocalData.KEY_UNAME)),String.valueOf(cursor.getString(cursor.getColumnIndex(LocalData.KEY_ID))));
-                localdatalist.add(hashData);
-                count ++;
+                if (cursor.getString(cursor.getColumnIndex(LocalData.KEY_HOLIDAY)) != null){
+                    HashMap<String,String> hashData = new HashMap<String,String>();
+                    hashData.put(String.valueOf(cursor.getInt(cursor.getColumnIndex(LocalData.KEY_DAY))), cursor.getString(cursor.getColumnIndex(LocalData.KEY_HOLIDAYTYPE)));
+                    //hashData.put(cursor.getString(cursor.getColumnIndex(LocalData.KEY_UNAME)),String.valueOf(cursor.getString(cursor.getColumnIndex(LocalData.KEY_ID))));
+                    localdatalist.add(hashData);
+                    count ++;
+                }
             }while(cursor.moveToNext());
         }
         cursor.close();

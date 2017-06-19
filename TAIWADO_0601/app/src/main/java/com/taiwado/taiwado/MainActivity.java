@@ -22,13 +22,10 @@ import cn.bmob.v3.Bmob;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static boolean isCloseAll = false;
-    public static final int REQUEST_STOP = 0;
     public static final int REQUEST_TIME = 2;
     public static int ID = 0;
     public static String username = null;
     public static String ObjectId = null;
-    public static String TimeReObjectID = null;
     public static int count = 0;
     private static final String TAG = MainActivity.class.getSimpleName();
     private long clickTime = 0; // 第一次点击的时间
@@ -89,6 +86,10 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_search) {
             Intent intentSearchList = new Intent(MainActivity.this, SearchListActivity.class);
             startActivity(intentSearchList);
+        }
+        if (id == R.id.action_traList) {
+            Intent intentTraList = new Intent(MainActivity.this,TrafficListActivity.class);
+            startActivity(intentTraList);
         }
 
         return super.onOptionsItemSelected(item);

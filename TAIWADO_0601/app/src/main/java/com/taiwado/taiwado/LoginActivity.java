@@ -25,8 +25,6 @@ public class LoginActivity extends AppCompatActivity {
 
     public static String nameDB = null;
     public static String passDB = null;
-    public static final int REQUEST_STOP = 0;
-    public static final int REQUEST_LOGIN = 1;
 
     public static String Bmob_AppId = "396d004b9ddb44265f799ad3d9c7ea5d";
     EditText etUserName, etUserPass;
@@ -163,6 +161,7 @@ public class LoginActivity extends AppCompatActivity {
         intentMain.putExtra("username",username);
         intentMain.putExtra("ObjectId",ObjectId);
         startActivity(intentMain);
+        LoginActivity.this.finish();
         //Intent intent = new Intent();
         //intent.putExtra("result",username);
     }

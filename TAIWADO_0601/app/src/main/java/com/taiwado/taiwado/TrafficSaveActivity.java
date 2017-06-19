@@ -19,28 +19,30 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Spinner;
 
 import java.util.Date;
 
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.SaveListener;
+
 import static com.taiwado.taiwado.MainActivity.username;
 import static com.taiwado.taiwado.R.array.days;
 import static com.taiwado.taiwado.R.array.months;
+import static com.taiwado.taiwado.TrafficListActivity.RESULT_TRA;
 
 public class TrafficSaveActivity extends AppCompatActivity {
     private Spinner spinnerMonth;
     private Spinner spinnerDay;
-    private ListView listView;
+    private static boolean isUpdate = false;
+    public static final int REQUEST_TRA = 1;
     private static int trafficID = 0;
-    private static String trafficObjectID = null;
+    public static String trafficObjectID = null;
     private static String From = null;
     private static String To = null;
     private static int Cash = 0;
     private static String day = null;
     private static String month = null;
-    private static String year = null;
-    private static String date = null;
     private SharedPreferences pref;
     private SharedPreferences.Editor edtior;
     EditText editDate,edit_From,edit_To,edit_Cash;
@@ -50,6 +52,7 @@ public class TrafficSaveActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_traffic_save);
+        isUpdate = false;
         Toolbar toolbar = (Toolbar) findViewById(R.id.traffic_toolbar);
         setSupportActionBar(toolbar);
         init();
@@ -59,10 +62,13 @@ public class TrafficSaveActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Snackbar.make(view, "通勤費を保存します！", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-                CloudTrafficInsert();
+                if (isUpdate){
+                    updateTrafficData();
+                }else {
+                    CloudTrafficInsert();
+                }
             }
         });
-
         updateSpinnerMonth();
     }
 
@@ -71,7 +77,15 @@ public class TrafficSaveActivity extends AppCompatActivity {
         edit_From = (EditText)findViewById(R.id.edit_From);
         edit_To = (EditText)findViewById(R.id.edit_To);
         edit_Cash= (EditText)findViewById(R.id.edit_Cash);
+        trafficID = 0;
+        trafficObjectID = null;
+    }
 
+    public void updateTrafficID (){
+        TrafficDataRepo repo = new TrafficDataRepo(this);
+        if (trafficObjectID != null && trafficID != 0){
+            repo.updateTrafficID(trafficObjectID,trafficID);
+        }
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -84,7 +98,6 @@ public class TrafficSaveActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -93,8 +106,10 @@ public class TrafficSaveActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
+        updateTrafficID();
         Intent intenttraffic = new Intent(TrafficSaveActivity.this,TrafficListActivity.class);
-        startActivity(intenttraffic);
+        startActivityForResult(intenttraffic,REQUEST_TRA);
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -104,8 +119,6 @@ public class TrafficSaveActivity extends AppCompatActivity {
     }
 
     public boolean onContextItemSelected(MenuItem item){
-
-
         return super.onContextItemSelected(item);
     }
 
@@ -126,13 +139,14 @@ public class TrafficSaveActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 month = (String)spinnerMonth.getItemAtPosition(position);
+                String edDate = null;
+                edDate = getYear() + " 年 " + month +" 月 " + day +" 日 ";
+                editDate.setText(edDate);
                 //Toast.makeText(TrafficSaveActivity.this,"検索店舗：" +monthItems[position], 2000).show();
-
                 }
                 //selectedTimeIn[0] = position;
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
             }
         });
 
@@ -150,27 +164,24 @@ public class TrafficSaveActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 day = (String)spinnerDay.getItemAtPosition(position);
+                String edDate = null;
+                edDate = getYear() + " 年 " + month +" 月 " + day +" 日 ";
+                editDate.setText(edDate);
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
             }
         });
-        String edDate = null;
-        edDate = getYear() + " 年 " + month +" 月 " + day +" 日 ";
-        editDate.setText(edDate);
     }
-
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void CloudTrafficInsert(){
 
-        CloudTrafficRepo cloudTrafficRepo = new CloudTrafficRepo();
         From = edit_From.getText().toString().trim();
         To = edit_To.getText().toString().trim();
         Cash = Integer.parseInt(edit_Cash.getText().toString().trim());
-        cloudTrafficRepo.insertTraffic(insertTrafficData(),username,From,To,Cash, Integer.parseInt(day),month,getYear(),nowDate());
+        trafficID = insertTrafficData();
+        insertTraffic(trafficID,username,From,To,Cash, Integer.parseInt(day),month,getYear(),nowDate());
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -189,6 +200,32 @@ public class TrafficSaveActivity extends AppCompatActivity {
         trafficData.date = nowDate();
 
         return repo.insertTrafficData(trafficData);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void updateTrafficData(){
+        TrafficDataRepo repo = new TrafficDataRepo(this);
+        TrafficData trafficData = new TrafficData();
+        trafficData.ID = trafficID;
+        trafficData.begin = edit_From.getText().toString().trim();
+        String begin = edit_From.getText().toString().trim();
+        trafficData.end = edit_To.getText().toString().trim();
+        String end = edit_To.getText().toString().trim();
+        trafficData.cash = Integer.parseInt(edit_Cash.getText().toString().trim());
+        int cash = Integer.parseInt(edit_Cash.getText().toString().trim());
+        trafficData.day  = Integer.parseInt(day);
+
+        trafficData.date = nowDate();
+        repo.updateTrafficData(trafficData);
+
+        CloudTrafficRepo cloudTrafficRepo = new CloudTrafficRepo();
+       cloudTrafficRepo.updateCloudTraffic(trafficObjectID,Integer.parseInt(day),begin,end,cash,nowDate());
+    }
+
+    @Override
+    public void onBackPressed() {
+        updateTrafficID();
+        CloseAllActivity.getInstance().finishActivity(this);
     }
 
     public String nowDate() {
@@ -262,5 +299,46 @@ public class TrafficSaveActivity extends AppCompatActivity {
         edtior.commit();
 
         return autoID;
+    }
+
+    public void insertTraffic(int ID,String username, String from ,String to , int cash,int day,String month,String year,String date) {
+        CloudTrafficData cloudTraffic = new CloudTrafficData();
+        final String[] trafficObjectId = new String[1];
+
+        cloudTraffic.setID(ID);
+        cloudTraffic.setUname(username);
+        cloudTraffic.setBegin(from);
+        cloudTraffic.setEnd(to);
+        cloudTraffic.setCash(cash);
+        cloudTraffic.setDay(day);
+        cloudTraffic.setMonth(month);
+        cloudTraffic.setYear(year);
+        cloudTraffic.setDate(date);
+
+        cloudTraffic.save(new SaveListener<String>() {
+            @Override
+            public void done(String objectid, BmobException e) {
+                if (e == null) {
+                    trafficObjectId[0] = objectid;
+                    trafficObjectID = trafficObjectId[0];
+                }
+            }
+        });
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_TRA && resultCode == RESULT_TRA) {
+            trafficObjectID = data.getExtras().getString("CloudTrafficID");
+            trafficID = data.getExtras().getInt("localTrafficID");
+            editDate.setText(data.getExtras().getString("date") + "日");
+            int position = Integer.parseInt(data.getExtras().getString("date"));
+            edit_From.setText(data.getExtras().getString("begin"));
+            edit_To.setText(data.getExtras().getString("end"));
+            edit_Cash.setText(data.getExtras().getString("cash"));
+            spinnerMonth.setEnabled(false);
+            spinnerDay.setSelection(position -1);
+            isUpdate = true;
+        }
     }
 }

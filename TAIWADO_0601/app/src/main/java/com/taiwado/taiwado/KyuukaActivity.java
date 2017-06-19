@@ -59,9 +59,6 @@ public class KyuukaActivity extends BaseActivity {
         LocalDataRepo repo = new LocalDataRepo(this);
         LocalData localData = new LocalData();
 
-        //localData = repo.getLocalDataByID(MainActivity.ID);
-        //repo.getLocaldataList(username,getDay(),getMonth(),getYear());
-
     }
     private void init(){
         username = null;
@@ -78,7 +75,6 @@ public class KyuukaActivity extends BaseActivity {
         }else {
             str = getIntent().getStringExtra("date");
         }
-
         return str;
     }
 
@@ -117,7 +113,7 @@ public class KyuukaActivity extends BaseActivity {
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void doClickOk(View v) {
         //LocalDataRepo repo = new LocalDataRepo(this);
-       // LocalData localData = new LocalData();
+        // LocalData localData = new LocalData();
 
         switch (v.getId()) {
             case R.id.kyuuka_ok:
@@ -129,11 +125,12 @@ public class KyuukaActivity extends BaseActivity {
                 if (holidayID != null || holidayRepo.getObjectId() != null){
                     if (holidayRepo.getObjectId() != null){
                         holidayID = holidayRepo.getObjectId();
+                        int localHolidayID = holidayRepo.getID();
+                        holidayRepo.updateHolidayData(holidayID,localHolidayID,setholiday(),holidayValue,timeInValue,timeOutValue,setwork(),setDay());
+                        updateLocalWork(localHolidayID);
+                        Toast.makeText(KyuukaActivity.this, username + " の休暇情報を更新しました。", Toast.LENGTH_SHORT).show();
                     }
-                    holidayRepo.updateHolidayData(holidayID,setholiday(),holidayValue,timeInValue,timeOutValue,setwork(),setDay());
-                    Toast.makeText(KyuukaActivity.this, username + " の休暇情報を更新しました。", Toast.LENGTH_SHORT).show();
                 }
-
                 break;
 
             default:
@@ -142,6 +139,17 @@ public class KyuukaActivity extends BaseActivity {
 
     }
 
+    public void updateLocalWork(int id){
+        LocalDataRepo repo = new LocalDataRepo(this);
+        LocalData localData = new LocalData();
+        localData.ID = id;
+        localData.timein = timeInValue;
+        localData.timeout = timeOutValue;
+        localData.holiday = setholiday();
+        localData.holidaytype = holidayValue;
+        localData.work = setwork();
+        repo.updateLocalWork(localData);
+    }
     @RequiresApi(api = Build.VERSION_CODES.N)
     public int createLocalData(){
 
@@ -161,7 +169,7 @@ public class KyuukaActivity extends BaseActivity {
             localData.month = getMonth();
         }
 
-        if (holidayValue == " "){
+        if (holidayValue.equals(" ")){
             localData.work = "work";
         }else {
             localData.holiday = "holiday";
@@ -177,7 +185,7 @@ public class KyuukaActivity extends BaseActivity {
     public String setwork(){
         String work = null;
 
-        if (holidayValue == " "){
+        if (holidayValue.equals("")){
             work = "work";
         }else {
             work = " ";

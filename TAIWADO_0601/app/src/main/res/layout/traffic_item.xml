@@ -30,7 +30,7 @@
         android:scrollbars="vertical"
         android:textColor="@android:color/black"
         android:textColorHint="@android:color/darker_gray"
-        android:textSize="18sp" />
+        android:textSize="24sp" />
 
     <TextView
         android:id="@+id/end"
@@ -46,10 +46,10 @@
         android:scrollbars="vertical"
         android:textColor="@android:color/black"
         android:textColorHint="@android:color/darker_gray"
-        android:textSize="18sp" />
+        android:textSize="24sp" />
 
     <TextView
-        android:id="@+id/cash"
+        android:id="@+id/list_cash"
         android:layout_width="30dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
@@ -59,9 +59,10 @@
         android:layout_weight="5"
         android:gravity="center_vertical"
         android:hint="please"
+        android:contextClickable="true"
         android:scrollbars="vertical"
         android:textColor="@android:color/black"
         android:textColorHint="@android:color/darker_gray"
-        android:textSize="18sp" />
+        android:textSize="24sp" />
 
 </LinearLayout>

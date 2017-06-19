@@ -1,39 +1,53 @@
 package com.taiwado.taiwado;
 
-import android.app.ListActivity;
+import android.app.Activity;
+import android.content.Intent;
 import android.icu.text.SimpleDateFormat;
 import android.icu.util.Calendar;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Spinner;
-import android.widget.TableLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.UpdateListener;
+
 import static com.taiwado.taiwado.MainActivity.username;
 
-public class TrafficListActivity extends ListActivity {
+public class TrafficListActivity extends Activity {
     private Spinner spinner;
-    private TableLayout trafficTable;
-    private SimpleAdapter adapter;
-
-    private final int WC = ViewGroup.LayoutParams.WRAP_CONTENT;
-    private final int MP = ViewGroup.LayoutParams.MATCH_PARENT;
-
+    private SimpleAdapter adapterlist;
+    private ListView listView;
+    private static String date,begin,end,cash;
+    public static final int RESULT_TRA = 100;
+    TrafficDataRepo repo = new TrafficDataRepo(this);
+    private TextView textcash;
+    protected static final int Menu_Item1= Menu.FIRST;
+    protected static final int Menu_Item2 = 101;
+    private static String selecctMonth = null;
+    private ArrayList<HashMap<String, String>> trafficDataList;
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onCreate(Bundle saveInstanceState) {
         int position = 0;
         super.onCreate(saveInstanceState);
         setContentView(R.layout.activity_traffic_list);
-
+        textcash = (TextView)findViewById(R.id.traffic_cash);
+        listView = (ListView)findViewById(R.id.traffic_list);
         spinner =(Spinner)findViewById(R.id.traffic__month_spinner);
         String[] mItems = getResources().getStringArray(R.array.months);
         spinner.setPrompt("月選択");
@@ -42,6 +56,7 @@ public class TrafficListActivity extends ListActivity {
         spinner .setAdapter(adapter);
         position = getPosition();
         spinner.setSelection(position);
+        selecctMonth = (String)spinner.getItemAtPosition(position);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @SuppressWarnings("WrongConstant")
@@ -49,7 +64,9 @@ public class TrafficListActivity extends ListActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String[] months = getResources().getStringArray(R.array.months);
                 //Toast.makeText(TrafficListActivity.this,"選択：" +months[position], 2000).show();
+                textcash.setText(repo.getMonthCash(username,months[position],getYear()));
                 tableLoad(months[position]);
+                selecctMonth = months[position];
 
             }
 
@@ -58,16 +75,90 @@ public class TrafficListActivity extends ListActivity {
 
             }
         });
+        trafficDataList =  repo.getTrafficDataList(username,selecctMonth,getYear());
+        adapterlist = new SimpleAdapter(this,trafficDataList,R.layout.traffic_item,new String[]{"date","begin","end","cash"},new int[]{R.id.date,R.id.begin,R.id.end,R.id.list_cash});
+        listView.setAdapter(adapterlist);
+        listView.setOnCreateContextMenuListener(MenuList);
     }
+
+    ListView.OnCreateContextMenuListener MenuList = new ListView.OnCreateContextMenuListener() {
+        @Override
+        public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+            menu.add(0,Menu_Item1,0,"更 新");
+            menu.add(0,Menu_Item2,0,"削 除");
+        }
+    };
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void tableLoad(String selecctMonth){
+        trafficDataList =  repo.getTrafficDataList(username,selecctMonth,getYear());
+        adapterlist = new SimpleAdapter(this,trafficDataList,R.layout.traffic_item,new String[]{"date","begin","end","cash"},new int[]{R.id.date,R.id.begin,R.id.end,R.id.list_cash});
+        listView.setAdapter(adapterlist);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        final AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        HashMap<String,String> map = (HashMap<String,String>)trafficDataList.get(info.position);
+        initVar();
+        date = map.get("date").substring(0,2);
+        begin = map.get("begin").replaceAll(" ","");
+        end = map.get("end").replaceAll(" ","");
+        cash = map.get("cash").replaceAll(" ","");
+
+        switch (item.getItemId()) {
+            case Menu_Item1:
+                //Toast.makeText(TrafficListActivity.this,String.valueOf(item.getItemId()), Toast.LENGTH_LONG).show();
+                int localTrafficID = repo.getTrafficID(username,selecctMonth,getYear(),date,begin,end,cash);
+                String CloudTrafficID = repo.getTrafficObjectID(username,selecctMonth,getYear(),date,begin,end,cash);
+                Intent intent = new Intent(this,TrafficSaveActivity.class);
+                intent.putExtra("localTrafficID",localTrafficID);
+                intent.putExtra("CloudTrafficID",CloudTrafficID);
+                intent.putExtra("date",date);
+                intent.putExtra("begin",begin);
+                intent.putExtra("end",end);
+                intent.putExtra("cash",cash);
+                TrafficListActivity.this.setResult(RESULT_TRA,intent);
+                TrafficListActivity.this.finish();
+                return true;
+
+            case Menu_Item2:
+
+                int localTrafficId = repo.getTrafficID(username,selecctMonth,getYear(),date,begin,end,cash);
+                String cloudTrafficId = repo.getTrafficObjectID(username,selecctMonth,getYear(),date,begin,end,cash);
+                deleteTrafficData(cloudTrafficId,localTrafficId);
+                Toast.makeText(TrafficListActivity.this," DELETE ! ",Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void deleteTrafficData(String objectid, int id){
+        CloudTrafficData cloudTrafficData = new CloudTrafficData();
+        cloudTrafficData.setObjectID(objectid);
+        cloudTrafficData.delete(new UpdateListener() {
+            @Override
+            public void done(BmobException e) {
+                if (e == null){
+                    Toast.makeText(TrafficListActivity.this," DELETE ! ",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
         TrafficDataRepo repo = new TrafficDataRepo(this);
-        ArrayList<HashMap<String, String>> trafficDataList =  repo.getTrafficDataList(username,selecctMonth,getYear());
+        repo.delete(id);
+        trafficDataList =  repo.getTrafficDataList(username,selecctMonth,getYear());
+        adapterlist = new SimpleAdapter(this,trafficDataList,R.layout.traffic_item,new String[]{"date","begin","end","cash"},new int[]{R.id.date,R.id.begin,R.id.end,R.id.list_cash});
+        listView.setAdapter(adapterlist);
+        listView.setOnCreateContextMenuListener(MenuList);
+    }
+    @Override
+    public void onBackPressed() {
 
-        adapter = new SimpleAdapter(this,trafficDataList,R.layout.traffic_item,new String[]{"date","begin","end","cash"},new int[]{R.id.date,R.id.begin,R.id.end,R.id.cash});
-        setListAdapter(adapter);
-
+        CloseAllActivity.getInstance().finishActivity(this);
     }
 
     public String getNowMonth() {
@@ -163,5 +254,11 @@ public class TrafficListActivity extends ListActivity {
         str = String.valueOf(cal.get(Calendar.YEAR));
 
         return str;
+    }
+    public void initVar(){
+        date = null;
+        begin = null;
+        end = null;
+        cash = null;
     }
 }

@@ -1,11 +1,13 @@
 package com.taiwado.taiwado;
 
+import android.util.Log;
+
 import java.util.List;
 
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
-import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UpdateListener;
 
 /**
  * Created by tei on 2017/06/14.
@@ -13,29 +15,7 @@ import cn.bmob.v3.listener.SaveListener;
 
 public class CloudTrafficRepo extends BaseActivity {
 
-    public void insertTraffic(int ID,String username, String from ,String to , int cash,int day,String month,String year,String date) {
-        CloudTrafficData cloudTraffic = new CloudTrafficData();
-        final String[] trafficObjectID = {null};
 
-        cloudTraffic.setID(ID);
-        cloudTraffic.setUname(username);
-        cloudTraffic.setBegin(from);
-        cloudTraffic.setEnd(to);
-        cloudTraffic.setCash(cash);
-        cloudTraffic.setDay(day);
-        cloudTraffic.setMonth(month);
-        cloudTraffic.setYear(year);
-        cloudTraffic.setDate(date);
-
-        cloudTraffic.save(new SaveListener<String>() {
-            @Override
-            public void done(String objectid, BmobException e) {
-                if (e == null) {
-                    trafficObjectID[0] = objectid;
-                }
-            }
-        });
-    }
 
     public  void queryHoliday(String username,String month,String year){
 
@@ -65,6 +45,26 @@ public class CloudTrafficRepo extends BaseActivity {
                     }
                 }else{
                     loge(e);
+                }
+            }
+        });
+    }
+
+    public void updateCloudTraffic(String objectId,int day,String begin,String end,int cash, String date) {
+
+        CloudTrafficData trafficData = new CloudTrafficData();
+        trafficData.setDay(day);
+        trafficData.setBegin(begin);
+        trafficData.setEnd(end);
+        trafficData.setCash(cash);
+        trafficData.setDate(date);
+        trafficData.update(objectId, new UpdateListener() {
+            @Override
+            public void done(BmobException e) {
+                if (e == null) {
+                    Log.i("bmob", "OK");
+                } else {
+                    Log.i("bmob", "更新失败：" + e.getMessage() + "," + e.getErrorCode());
                 }
             }
         });

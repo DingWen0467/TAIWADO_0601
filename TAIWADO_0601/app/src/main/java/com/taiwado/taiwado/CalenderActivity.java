@@ -29,18 +29,25 @@ public class CalenderActivity extends AppCompatActivity implements DateActivity.
         setContentView(R.layout.activity_calender);
         DateActivity calendar = (DateActivity) findViewById(R.id.newCalendar);
         calendar.Listener = this;
-        username = getIntent().getStringExtra("username");
+        init();
         LocalDataRepo repo = new LocalDataRepo(this);
-        LocalData localData = new LocalData();
 
         ArrayList<HashMap<String, String>> localdatalist =  repo.getLocaldataList(username,getMonth(),getYear());
         for (HashMap<String,String> map : localdatalist)
             for (Map.Entry<String, String> entry : map.entrySet())
-                if (entry.getKey() != "" && entry.getValue() != "") {
-                    Kyuuka[Integer.parseInt(entry.getKey())] = entry.getValue();
+                if (entry.getKey() != " ") {
+                    //Kyuuka[Integer.parseInt(entry.getKey())] = null;
+                    if (!entry.getValue().isEmpty()&& !entry.getValue().equals(" ")){
+                        Kyuuka[Integer.parseInt(entry.getKey())] = entry.getValue();
+                    }
                 }
     }
 
+    public void init(){
+        for (int i = 0; i <50; i++){
+            Kyuuka[i] = null;
+        }
+    }
     @Override
     public View findViewById(@IdRes int id) {
         return super.findViewById(id);
