@@ -254,6 +254,8 @@ public class TrafficDataRepo {
                 trafficObjectid = cursor.getString(cursor.getColumnIndex(TrafficData.KEY_OBID));
             }while(cursor.moveToNext());
         }
+        cursor.close();
+        db.close();
         return trafficObjectid;
     }
 

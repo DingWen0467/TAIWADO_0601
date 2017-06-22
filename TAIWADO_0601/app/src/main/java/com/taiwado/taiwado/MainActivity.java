@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,9 +17,15 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import cn.bmob.v3.Bmob;
+import cn.bmob.v3.BmobRealTimeData;
+import cn.bmob.v3.listener.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -30,13 +37,15 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
     private long clickTime = 0; // 第一次点击的时间
     public TimeCount timeCount;
-    private HolidayRepo hrDay = new HolidayRepo();
+    BmobRealTimeData commInfo = new BmobRealTimeData();
+    List<StockNum> messages = new ArrayList<StockNum>();
+    List<String> mess = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Bmob.initialize(this,"396d004b9ddb44265f799ad3d9c7ea5d");
+        Bmob.initialize(this, "396d004b9ddb44265f799ad3d9c7ea5d");
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         CloseAllActivity.getInstance().addActivity(this);
@@ -48,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         text_Now.setText(getNowMonth());
         timeCount = new TimeCount();
         timeCount.queryObjects(username);
-        hrDay.queryHoliday(username,"06");
+        init();
     }
 
     @Override
@@ -77,9 +86,9 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            Intent intentKyuuka = new Intent(MainActivity.this,KyuukaActivity.class);
-            intentKyuuka.putExtra("username",username);
-            intentKyuuka.putExtra("main","main");
+            Intent intentKyuuka = new Intent(MainActivity.this, KyuukaActivity.class);
+            intentKyuuka.putExtra("username", username);
+            intentKyuuka.putExtra("main", "main");
             startActivity(intentKyuuka);
             return true;
         }
@@ -88,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intentSearchList);
         }
         if (id == R.id.action_traList) {
-            Intent intentTraList = new Intent(MainActivity.this,TrafficListActivity.class);
+            Intent intentTraList = new Intent(MainActivity.this, TrafficListActivity.class);
             startActivity(intentTraList);
         }
 
@@ -100,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.button_Time:
                 String timeInfo = timeCount.getTimeObjectID();
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    setTimeText(username,timeInfo);
+                    setTimeText(username, timeInfo);
                 }
                 //Intent intentTime = new Intent(this, TimeActivity.class);
                 //intentTime.putExtra("username", username);
@@ -110,14 +119,14 @@ public class MainActivity extends AppCompatActivity {
             case R.id.button_Shifuto:
 
                 Intent intentDate = new Intent(this, CalenderActivity.class);
-                intentDate.putExtra("username",username);
+                intentDate.putExtra("username", username);
                 startActivity(intentDate);
                 break;
 
             case R.id.button_Tsukinhi:
                 //Intent intentTsukinhi = new Intent(this, TrafficListActivity.class);
                 //startActivity(intentTsukinhi);
-                Intent intentSaveTsukinhi = new Intent(this,TrafficSaveActivity.class);
+                Intent intentSaveTsukinhi = new Intent(this, TrafficSaveActivity.class);
                 startActivity(intentSaveTsukinhi);
                 break;
 
@@ -196,6 +205,7 @@ public class MainActivity extends AppCompatActivity {
             return super.onKeyDown(keyCode, event);
         }
     }
+
     private void exit() {
         if ((System.currentTimeMillis() - clickTime) > 2000) {
             Toast.makeText(this, "もう一度", Toast.LENGTH_SHORT).show();
@@ -206,17 +216,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void setTimeText(String username,String timeInfo){
+    public void setTimeText(String username, String timeInfo) {
         TextView text_timeIn = (TextView) findViewById(R.id.textTimeIn);
         TextView text_AddIn = (TextView) findViewById(R.id.textAddIn);
-        TextView text_timeOut = (TextView)findViewById(R.id.textTimeOut);
-        TextView text_AddOut = (TextView)findViewById(R.id.textAddOut);
+        TextView text_timeOut = (TextView) findViewById(R.id.textTimeOut);
+        TextView text_AddOut = (TextView) findViewById(R.id.textAddOut);
 
-        if (timeInfo == null){
+        if (timeInfo == null) {
             timeCount.createTimeRecord(username);
             text_timeIn.setText(" 出勤時間：" + timeCount.nowTime());
             text_AddIn.setText(" 出勤地点：" + timeCount.getAddress());
-        }else{
+        } else {
             updateTimeinfo(timeInfo);
             text_timeIn.setText(" 出勤時間：" + timeCount.getTimeIn());
             text_AddIn.setText(" 出勤地点：" + timeCount.getAddress());
@@ -224,8 +234,49 @@ public class MainActivity extends AppCompatActivity {
             text_AddOut.setText(" 退勤地点：" + timeCount.getAddress());
         }
     }
+
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private void updateTimeinfo(String objectId){
+    private void updateTimeinfo(String objectId) {
         timeCount.updateTimeRecord(objectId);
+    }
+
+    public void init() {
+
+        commInfo.start(new ValueEventListener() {
+            @Override
+            public void onConnectCompleted(Exception e) {
+                if (commInfo.isConnected()) {
+                    commInfo.subTableUpdate("StockNum");
+                }
+            }
+
+            @Override
+            public void onDataChange(JSONObject arg0) {
+                Log.d("bmob", "("+arg0.optString("action")+")"+"数据："+arg0);
+                if (BmobRealTimeData.ACTION_UPDATETABLE.equals(arg0.optString("action"))) {
+                    JSONObject data = arg0.optJSONObject("data");
+                    mess.add(String.valueOf(data.optInt("ID")));
+                    mess.add(data.optString("storeName"));
+
+                    updateStrckNum(data.optInt("ID"),data.optString("jan"),data.optString("storeName"),data.optInt("exitNum"),data.optString("shirizu"),data.optString("commodity"));
+                }
+            }
+        });
+    }
+    private  void updateStrckNum(int ID,String jan,String storeName,int exitNum,String shirizu,String commodity){
+        StockNumRepo repo = new StockNumRepo(this);
+        StockNum stockNum = new StockNum(ID,exitNum,storeName,jan);
+        stockNum.setID(ID);
+        stockNum.setJan(jan);
+        stockNum.setStoreName(storeName);
+        stockNum.setExitNum(exitNum);
+        stockNum.setShirizu(shirizu);
+        stockNum.setCommodity(commodity);
+
+        if (repo.getDataByID(ID) == 0){
+                repo.insertData(stockNum);
+        }else {
+            repo.updateCount(stockNum);
+        }
     }
 }

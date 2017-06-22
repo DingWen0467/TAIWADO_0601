@@ -84,7 +84,7 @@ public class TrafficListActivity extends Activity {
     ListView.OnCreateContextMenuListener MenuList = new ListView.OnCreateContextMenuListener() {
         @Override
         public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-            menu.add(0,Menu_Item1,0,"更 新");
+            menu.add(0,Menu_Item1,0,"変 更");
             menu.add(0,Menu_Item2,0,"削 除");
         }
     };

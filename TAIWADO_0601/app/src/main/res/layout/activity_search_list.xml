@@ -7,49 +7,64 @@
     <LinearLayout
         android:id="@+id/Search_header"
         android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:layout_margin="15dp"
+        android:layout_height="50dp"
+        android:layout_margin="3dp"
         android:orientation="horizontal"
-
         android:weightSum="1">
 
-        <Spinner
-            android:id="@+id/search_tenpo"
-            android:layout_width="158dp"
+        <AutoCompleteTextView
+            android:id="@+id/jan_search"
+            android:layout_width="170dp"
             android:layout_height="match_parent"
-            android:layout_margin="1dp"
-            android:entries="@array/tenpos"
-            android:spinnerMode="dialog">
-
-        </Spinner>
-
-        <EditText
-            android:id="@+id/edit_JAN"
-            android:layout_width="137dp"
-            android:layout_height="39dp"
             android:ems="10"
-            android:inputType="number"
-            android:padding="1dp"
-            android:paddingBottom="1dp"
-            android:paddingEnd="1dp"
-            android:paddingLeft="1dp"
-            android:paddingRight="1dp"
-            android:paddingStart="1dp"
-            android:paddingTop="1dp"
-            android:text="2075"
-            android:textAlignment="center">
+            android:imeOptions="actionSearch"
+            android:inputType="textAutoComplete|textAutoCorrect">
+
             <requestFocus />
-        </EditText>
+        </AutoCompleteTextView>
 
         <ImageView
             android:id="@+id/search_bar"
             android:layout_width="55dp"
-            android:onClick="doClickOk"
             android:layout_height="match_parent"
+            android:onClick="doClickOk"
             android:src="@drawable/search" />
 
     </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:clickable="false"
+        android:background="@android:color/darker_gray"/>
 
+    <LinearLayout
+        android:id="@+id/stock_body"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_margin="3dp"
+        android:orientation="horizontal"
+        android:weightSum="1">
+
+        <TextView
+            android:id="@+id/stock_shirizu"
+            android:layout_width="172dp"
+            android:textSize="20dp"
+            android:hint="シリーズ"
+            android:gravity="center_horizontal"
+            android:layout_height="match_parent" />
+        <TextView
+            android:id="@+id/stock_name"
+            android:textSize="20dp"
+            android:hint="商品"
+            android:gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:clickable="false"
+        android:background="@android:color/darker_gray"/>
     <TableLayout
         android:id="@+id/search_table_title"
         android:layout_width="match_parent"
@@ -60,27 +75,15 @@
         <TableRow>
 
             <TextView
-                android:id="@+id/table_1"
-                android:layout_weight="0.5"
-                android:background="@android:color/holo_blue_dark"
-                android:gravity="center_horizontal"
-                android:lineSpacingExtra="8sp"
-                android:padding="10dp"
-
-                android:text="シリーズ"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <TextView
                 android:id="@+id/table_2"
                 android:layout_column="1"
                 android:layout_margin="1dp"
-                android:layout_weight="1"
+                android:layout_weight="0.5"
                 android:background="@android:color/holo_blue_dark"
                 android:gravity="center_horizontal"
                 android:padding="10dp"
-                android:text="商品"
-                android:textSize="18sp"
+                android:text="店舗"
+                android:textSize="15sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -92,31 +95,15 @@
                 android:gravity="center_horizontal"
                 android:padding="10dp"
                 android:text="在庫件数"
-                android:textSize="18sp"
+                android:textSize="15sp"
                 android:textStyle="bold" />
         </TableRow>
 
     </TableLayout>
-    <android.support.v4.widget.NestedScrollView
+    <ListView
+        android:id="@+id/stock_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <TableLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:stretchColumns="1"
-            android:id="@+id/search_table_body"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentTop="true"
-
-            >
-            <TableRow>
-
-
-            </TableRow>
-
-        </TableLayout>
-
-    </android.support.v4.widget.NestedScrollView>
-
+        android:layout_height="match_parent" >
+    </ListView>
 
 </LinearLayout>

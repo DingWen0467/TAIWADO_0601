@@ -3,86 +3,58 @@ package com.taiwado.taiwado;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Spinner;
-import android.widget.TableLayout;
-import android.widget.TableRow;
+import android.widget.AutoCompleteTextView;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import static com.taiwado.taiwado.R.array.tenpos;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import cn.bmob.v3.BmobRealTimeData;
 
 public class SearchListActivity extends AppCompatActivity {
-
-    private Spinner spinner;
-    private TableLayout searchTable;
-    protected int position = 0;
-    private final int WC = ViewGroup.LayoutParams.WRAP_CONTENT;
-    private final int MP = ViewGroup.LayoutParams.MATCH_PARENT;
+    private AutoCompleteTextView autoText;
+    private SimpleAdapter adapterlist;
+    private ListView listView;
+    private ArrayList<HashMap<String, String>> exitNumList;
+    private TextView shirizu;
+    private TextView stockname;
+    private static String text = null;
+    private static ImageView button;
+    StockNumRepo repo = new StockNumRepo(this);
+    BmobRealTimeData commInfo = new BmobRealTimeData();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_list);
-
-        spinner =(Spinner)findViewById(R.id.search_tenpo);
-        final String[] mItems = getResources().getStringArray(tenpos);
-
-        ArrayAdapter<String> adapter=new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, mItems);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner .setAdapter(adapter);
-
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @SuppressWarnings("WrongConstant")
+        button = (ImageView) findViewById(R.id.search_bar);
+        listView = (ListView)findViewById(R.id.stock_list);
+        shirizu = (TextView)findViewById(R.id.stock_shirizu);
+        stockname = (TextView)findViewById(R.id.stock_name);
+        autoText = (AutoCompleteTextView)findViewById(R.id.jan_search);
+        String [] autoString = getResources().getStringArray(R.array.JAN);
+        ArrayAdapter<String>adapter = new ArrayAdapter<String>(SearchListActivity.this,android.R.layout.simple_dropdown_item_1line,autoString);
+        autoText.setAdapter(adapter);
+        text = String.valueOf(autoText.getText());
+        autoText.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                //String[] tenpos = getResources().getStringArray(tenpos);
-                Toast.makeText(SearchListActivity.this,"検索店舗：" +mItems[position], 2000).show();
-                //tableLoad();
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+               text = String.valueOf(autoText.getText());
             }
         });
-
-
-
     }
 
     public void doClickOk(View v){
         if (v.getId() == R.id.search_bar) {
-            tableLoad();
+            exitNumList =  repo.getStockNum(text);
+            adapterlist = new SimpleAdapter(this,exitNumList,R.layout.stock_item,new String[]{"name","num"},new int[]{R.id.name,R.id.num});
+            listView.setAdapter(adapterlist);
+            shirizu.setText(repo.getShirizu(text));
+            stockname.setText(repo.getCommodity(text));
         }
-
-    }
-
-    public void tableLoad(){
-        int rows = 0;
-        searchTable = (TableLayout)findViewById(R.id.search_table_body);
-
-        if (rows != 0) {
-            searchTable.removeAllViewsInLayout();
-        }
-        searchTable.setStretchAllColumns(true);
-
-        for (int i = 0; i <4; i++){
-            //TableRow tableRow = new TableRow(getBaseContext());
-            TableRow tableRow = new TableRow(SearchListActivity.this);
-            for (int j = 0; j < 3; j++){
-                //TextView textView = new TextView(getBaseContext());
-                TextView textView = new TextView(SearchListActivity.this);
-                //textView.setBackgroundResource(R.drawable.shape);
-                //textView.setPadding(1,1,1,1);
-                textView.setText("(" +i+","+j+")");
-                tableRow.addView(textView,j);
-            }
-            searchTable.addView(tableRow,new TableLayout.LayoutParams(MP,WC,1));
-        }
-
     }
 }

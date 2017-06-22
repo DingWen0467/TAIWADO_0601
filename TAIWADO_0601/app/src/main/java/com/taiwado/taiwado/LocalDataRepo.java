@@ -65,9 +65,9 @@ public class LocalDataRepo {
         ContentValues values = new ContentValues();
         values.put(LocalData.KEY_TIMEIN,localData.timein);
         values.put(LocalData.KEY_TIMEOUT,localData.timeout);
-        values.put(LocalData.KEY_WORK,"work");
-        values.put(LocalData.KEY_HOLIDAY,"");
-        values.put(LocalData.KEY_HOLIDAYTYPE,"");
+        values.put(LocalData.KEY_WORK,localData.work);
+        values.put(LocalData.KEY_HOLIDAY,localData.holiday);
+        values.put(LocalData.KEY_HOLIDAYTYPE,localData.holidaytype);
         db.update(LocalData.TABLE,values,LocalData.KEY_ID+"=?",new String[] {String.valueOf(localData.ID)});
         db.close();
     }

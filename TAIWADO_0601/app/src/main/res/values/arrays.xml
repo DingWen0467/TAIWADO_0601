@@ -90,5 +90,20 @@
         <item>前休</item>
         <item>後休</item>
     </string-array>
-
+    <string-array name="JAN">
+        <item></item>
+        <item>2075</item>
+        <item>2983</item>
+        <item>2082</item>
+        <item>3119</item>
+        <item>2976</item>
+        <item>2990</item>
+        <item>3867</item>
+        <item>3836</item>
+        <item>3270</item>
+        <item>2006</item>
+        <item>2129</item>
+        <item>2105</item>
+        <item>3199</item>
+    </string-array>
 </resources>
