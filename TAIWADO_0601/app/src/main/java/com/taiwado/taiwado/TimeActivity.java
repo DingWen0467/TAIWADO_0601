@@ -1,7 +1,6 @@
 package com.taiwado.taiwado;
 
 import android.annotation.TargetApi;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.icu.text.SimpleDateFormat;
 import android.os.Build;
@@ -9,7 +8,6 @@ import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 
 import java.util.Date;
 import java.util.List;
@@ -40,21 +38,6 @@ public class TimeActivity extends  BaseActivity {
     @SuppressWarnings("NewApi")
     public void doClickOk(View v) {
 
-        switch (v.getId()) {
-            case R.id.button_timerecord:
-                TextView text_timeinfo = (TextView) findViewById(R.id.text_timeinfo);
-                text_timeinfo.setText(nowTime());
-                timeRecord();
-                Intent intent = new Intent();
-                intent.putExtra("timerecord",setTimeInfo());
-                intent.putExtra("timeaddinfo",setTimeAdd());
-                TimeActivity.this.setResult(REQUEST_TIME, intent);
-                TimeActivity.this.finish();
-                break;
-
-            default:
-                break;
-        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)

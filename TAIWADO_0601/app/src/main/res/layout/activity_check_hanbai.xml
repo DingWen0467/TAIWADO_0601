@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.taiwado.taiwado.CheckHanbai">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="495dp"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="8dp">
+
+        <LinearLayout
+            android:id="@+id/Search_header"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_margin="5dp"
+            android:orientation="horizontal"
+
+            android:weightSum="2">
+
+            <Spinner
+                android:id="@+id/search_tenpo"
+                android:layout_width="96dp"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:layout_weight="1"
+                android:entries="@array/tenpos"
+                android:spinnerMode="dialog">
+
+            </Spinner>
+
+            <Spinner
+                android:id="@+id/search_shirizu"
+                android:layout_width="89dp"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+
+                android:layout_weight="1"
+                android:entries="@array/shirizu"
+                android:padding="1dp"
+                android:paddingBottom="1dp"
+                android:paddingEnd="1dp"
+                android:paddingLeft="1dp"
+                android:paddingRight="1dp"
+                android:paddingStart="1dp"
+                android:paddingTop="1dp"
+                android:spinnerMode="dialog">
+
+            </Spinner>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            android:clickable="false" />
+
+        <TableLayout
+            android:id="@+id/traffic_table_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/cardview_compat_inset_shadow"
+            android:shrinkColumns="2">
+
+            <TableRow>
+
+                <Spinner
+                    android:id="@+id/select_date"
+                    android:layout_height="match_parent"
+                    android:layout_margin="1dp"
+                    android:layout_weight="0.2"
+                    android:background="@android:color/holo_blue_light"
+                    android:entries="@array/months"
+                    android:spinnerMode="dialog"></Spinner>
+
+                <TextView
+                    android:id="@+id/table_1"
+                    android:layout_column="1"
+                    android:layout_margin="1dp"
+                    android:layout_weight="1"
+                    android:background="@android:color/holo_blue_dark"
+                    android:gravity="center_horizontal"
+                    android:padding="10dp"
+                    android:text="JAN"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/table_2"
+                    android:layout_column="1"
+                    android:layout_margin="1dp"
+                    android:layout_weight="1"
+                    android:background="@android:color/holo_blue_dark"
+                    android:gravity="center_horizontal"
+                    android:padding="10dp"
+                    android:text="商品"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/table_3"
+                    android:layout_column="1"
+                    android:layout_margin="1dp"
+                    android:layout_weight="0.5"
+                    android:background="@android:color/holo_blue_dark"
+                    android:gravity="center_horizontal"
+                    android:padding="10dp"
+                    android:text="販売数"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+            </TableRow>
+
+        </TableLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            android:clickable="false" />
+
+        <ListView
+            android:id="@+id/hanbai_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></ListView>
+
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>

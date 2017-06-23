@@ -7,6 +7,11 @@ import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
 
 /**
  * Created by tei on 2017/06/20.
@@ -166,5 +171,24 @@ public class StockNumRepo {
         values.put(StockNum.KEY_COMMODITY,stockNum.getCommodity());
         db.update(StockNum.TABLE,values,StockNum.KEY_ID+"=?",new String[]{String.valueOf(stockNum.getID())});
         db.close();
+    }
+
+    public void queryObject(){
+        final BmobQuery<StockNum> bmobQuery = new BmobQuery<StockNum>();
+        bmobQuery.addWhereExists("jan");
+        bmobQuery.findObjects(new FindListener<StockNum>() {
+            @Override
+            public void done(List<StockNum> list, BmobException e) {
+                if (e == null){
+                    for (StockNum stockNum : list){
+                        if (getDataByID(stockNum.getID()) == 0){
+                            insertData(stockNum);
+                        }else {
+                            updateCount(stockNum);
+                        }
+                    }
+                }
+            }
+        });
     }
 }

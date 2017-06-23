@@ -39,7 +39,7 @@ public class SearchListActivity extends AppCompatActivity {
         String [] autoString = getResources().getStringArray(R.array.JAN);
         ArrayAdapter<String>adapter = new ArrayAdapter<String>(SearchListActivity.this,android.R.layout.simple_dropdown_item_1line,autoString);
         autoText.setAdapter(adapter);
-        text = String.valueOf(autoText.getText());
+        repo.queryObject();
         autoText.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

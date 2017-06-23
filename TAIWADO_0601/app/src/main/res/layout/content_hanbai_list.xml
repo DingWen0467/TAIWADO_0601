@@ -7,8 +7,8 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.taiwado.taiwado.HanbaiList"
     tools:showIn="@layout/activity_hanbai_list">
-
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_height="495dp"
         android:orientation="vertical"
         android:layout_width="368dp"
@@ -19,30 +19,72 @@
             android:id="@+id/Search_header"
             android:layout_width="match_parent"
             android:layout_height="35dp"
-            android:layout_margin="15dp"
+            android:layout_margin="5dp"
             android:orientation="horizontal"
-
+            android:layout_gravity="center_horizontal"
             android:weightSum="2">
 
             <Spinner
                 android:id="@+id/search_tenpo"
-                android:layout_width="96dp"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="1dp"
-                android:layout_weight="0.86"
-                android:background="@android:color/holo_blue_light"
+
                 android:entries="@array/tenpos"
                 android:spinnerMode="dialog">
 
             </Spinner>
 
-            <Spinner
-                android:id="@+id/search_shirizu"
-                android:layout_width="89dp"
+
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:clickable="false"
+            android:background="@android:color/darker_gray"/>
+        <LinearLayout
+            android:id="@+id/body6"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_margin="3dp"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <TextView
+                android:id="@+id/hanbai_shirizu"
+                android:layout_width="172dp"
+                android:textSize="20dp"
+                android:hint="シリーズ"
+                android:gravity="center_horizontal"
+                android:layout_height="match_parent" />
+            <TextView
+                android:id="@+id/hanbai_commodity"
+                android:textSize="20dp"
+                android:hint="商品"
+                android:gravity="center_horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:clickable="false"
+            android:background="@android:color/darker_gray"/>
+        <LinearLayout
+            android:id="@+id/insert_body1"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_margin="15dp"
+            android:orientation="horizontal"
+
+            android:weightSum="2">
+
+            <TextView
+                android:id="@+id/text_date"
+                android:layout_width="80dp"
                 android:layout_height="match_parent"
-                android:layout_margin="1dp"
-                android:background="@color/colorAccent"
-                android:entries="@array/shirizu"
+                android:background="@android:color/holo_blue_dark"
+                android:gravity="center"
                 android:padding="1dp"
                 android:paddingBottom="1dp"
                 android:paddingEnd="1dp"
@@ -50,105 +92,158 @@
                 android:paddingRight="1dp"
                 android:paddingStart="1dp"
                 android:paddingTop="1dp"
-                android:spinnerMode="dialog"
-                android:layout_weight="0.94">
+                android:text="日付："
+                android:onClick="doClick"
+                android:textAlignment="center"
+                android:textSize="18sp" />
 
-            </Spinner>
+            <EditText
+                android:id="@+id/edit_date"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:ems="10"
+                android:inputType="date"
+                android:padding="1dp"
+                android:paddingBottom="1dp"
+                android:paddingEnd="1dp"
+                android:paddingLeft="1dp"
+                android:paddingRight="1dp"
+                android:paddingStart="1dp"
+                android:paddingTop="1dp"
 
-
-
-            <Button
-                android:id="@+id/button_list"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="照会"
-                android:onClick="doClickOk" />
+                android:textAlignment="center" />
 
         </LinearLayout>
 
-        <TableLayout
-            android:id="@+id/search_table_title"
+        <LinearLayout
+            android:id="@+id/insert_body2"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/cardview_compat_inset_shadow"
-            android:shrinkColumns="1">
+            android:layout_height="35dp"
+            android:layout_margin="15dp"
+            android:orientation="horizontal"
 
-            <TableRow>
+            android:weightSum="2">
 
-                <TextView
-                    android:id="@+id/table_4"
-                    android:layout_column="1"
-                    android:layout_margin="1dp"
-                    android:layout_weight="0.2"
-                    android:background="@android:color/holo_blue_dark"
-                    android:gravity="center_horizontal"
-                    android:padding="10dp"
-                    android:text="日付"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/table_1"
-                    android:layout_column="1"
-                    android:layout_margin="1dp"
-                    android:layout_weight="0.2"
-                    android:background="@android:color/holo_blue_dark"
-                    android:gravity="center_horizontal"
-                    android:padding="10dp"
-                    android:text="JAN"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/table_2"
-                    android:layout_column="1"
-                    android:layout_margin="1dp"
-                    android:layout_weight="1"
-                    android:background="@android:color/holo_blue_dark"
-                    android:gravity="center_horizontal"
-                    android:padding="10dp"
-                    android:text="商品"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/table_3"
-                    android:layout_column="1"
-                    android:layout_margin="1dp"
-                    android:layout_weight="0.3"
-                    android:background="@android:color/holo_blue_dark"
-                    android:gravity="center_horizontal"
-                    android:padding="10dp"
-                    android:text="販売数"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-            </TableRow>
-
-        </TableLayout>
-        <android.support.v4.widget.NestedScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <TableLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/text_JAN"
+                android:layout_width="80dp"
                 android:layout_height="match_parent"
-                android:stretchColumns="2"
-                android:id="@+id/hanbai_list"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentTop="true"
+                android:background="@android:color/holo_blue_dark"
+                android:gravity="center"
+                android:padding="1dp"
+                android:paddingBottom="1dp"
+                android:paddingEnd="1dp"
+                android:paddingLeft="1dp"
+                android:paddingRight="1dp"
+                android:paddingStart="1dp"
+                android:paddingTop="1dp"
+                android:text="JAN："
+                android:textAlignment="center"
+                android:textSize="18sp" />
 
-                >
-                <TableRow>
+            <EditText
+                android:id="@+id/edit_JAN"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:ems="10"
+                android:inputType="number"
+                android:padding="1dp"
+                android:paddingBottom="1dp"
+                android:paddingEnd="1dp"
+                android:paddingLeft="1dp"
+                android:paddingRight="1dp"
+                android:paddingStart="1dp"
+                android:paddingTop="1dp"
 
+                android:textAlignment="center" />
 
-                </TableRow>
+        </LinearLayout>
 
-            </TableLayout>
+        <LinearLayout
+            android:id="@+id/insert_body4"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_margin="15dp"
+            android:orientation="horizontal"
 
-        </android.support.v4.widget.NestedScrollView>
+            android:weightSum="2">
 
+            <TextView
+                android:id="@+id/text_kakaku"
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:background="@android:color/holo_blue_dark"
+                android:gravity="center"
+                android:padding="1dp"
+                android:paddingBottom="1dp"
+                android:paddingEnd="1dp"
+                android:paddingLeft="1dp"
+                android:paddingRight="1dp"
+                android:paddingStart="1dp"
+                android:paddingTop="1dp"
+                android:text="価格："
+                android:textAlignment="center"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/edit_kakaku"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:ems="10"
+                android:inputType="numberDecimal"
+                android:padding="1dp"
+                android:paddingBottom="1dp"
+                android:paddingEnd="1dp"
+                android:paddingLeft="1dp"
+                android:paddingRight="1dp"
+                android:paddingStart="1dp"
+                android:paddingTop="1dp"
+
+                android:textAlignment="center" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/insert_body5"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_margin="15dp"
+            android:orientation="horizontal"
+
+            android:weightSum="2">
+
+            <TextView
+                android:id="@+id/text_num"
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:background="@android:color/holo_blue_dark"
+                android:gravity="center"
+                android:padding="1dp"
+                android:paddingBottom="1dp"
+                android:paddingEnd="1dp"
+                android:paddingLeft="1dp"
+                android:paddingRight="1dp"
+                android:paddingStart="1dp"
+                android:paddingTop="1dp"
+                android:text="件数："
+                android:textAlignment="center"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/edit_num"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:ems="10"
+                android:inputType="numberDecimal"
+                android:padding="1dp"
+                android:paddingBottom="1dp"
+                android:paddingEnd="1dp"
+                android:paddingLeft="1dp"
+                android:paddingRight="1dp"
+                android:paddingStart="1dp"
+                android:paddingTop="1dp"
+                android:textAlignment="center" />
+
+        </LinearLayout>
 
     </LinearLayout>
-
-
-
 </android.support.constraint.ConstraintLayout>
