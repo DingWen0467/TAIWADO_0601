@@ -35,7 +35,7 @@ public class TrafficListActivity extends Activity {
     private static String date,begin,end,cash;
     public static final int RESULT_TRA = 100;
     TrafficDataRepo repo = new TrafficDataRepo(this);
-    private TextView textcash;
+    private TextView textcash,textdate;
     protected static final int Menu_Item1= Menu.FIRST;
     protected static final int Menu_Item2 = 101;
     private static String selecctMonth = null;
@@ -47,6 +47,7 @@ public class TrafficListActivity extends Activity {
         super.onCreate(saveInstanceState);
         setContentView(R.layout.activity_traffic_list);
         textcash = (TextView)findViewById(R.id.traffic_cash);
+        textdate = (TextView)findViewById(R.id.table_header_month);
         listView = (ListView)findViewById(R.id.traffic_list);
         spinner =(Spinner)findViewById(R.id.traffic__month_spinner);
         String[] mItems = getResources().getStringArray(R.array.months);
@@ -65,6 +66,7 @@ public class TrafficListActivity extends Activity {
                 String[] months = getResources().getStringArray(R.array.months);
                 //Toast.makeText(TrafficListActivity.this,"選択：" +months[position], 2000).show();
                 textcash.setText(repo.getMonthCash(username,months[position],getYear()));
+                textdate.setText(months[position]);
                 tableLoad(months[position]);
                 selecctMonth = months[position];
 
@@ -197,7 +199,7 @@ public class TrafficListActivity extends Activity {
         }
         return rows;
     }
-    private int getPosition(){
+    public int getPosition(){
         int position = 0;
 
         String month = getNowMonth();

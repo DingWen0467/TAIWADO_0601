@@ -5,16 +5,16 @@
 
     <TextView
         android:id="@+id/date"
-        android:text="dd"
         android:layout_width="30dp"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:textSize="18sp"
-        android:layout_weight="1"
         android:layout_gravity="center_vertical"
-        android:textColor="@android:color/black" />
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_weight="5"
+        android:gravity="center_vertical"
+        android:text="dd"
+        android:textColor="@android:color/black"
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/jan"
@@ -33,7 +33,7 @@
         android:textSize="24sp" />
 
     <TextView
-        android:id="@+id/name"
+        android:id="@+id/cash"
         android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"

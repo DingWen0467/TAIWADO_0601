@@ -3,6 +3,7 @@
     <string name="title_activity_main"></string>
     <string name="action_settings">出勤予定</string>
     <string name="action_traList">通勤照会</string>
+    <string name="action_hanList">販売照会</string>
     <string name="action_search">Search</string>
     <string name="action_plus">plus</string>
     <string name="title_activity_traffic_list">TrafficListActivity</string>

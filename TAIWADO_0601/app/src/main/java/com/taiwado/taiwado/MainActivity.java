@@ -101,6 +101,10 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intentTraList);
         }
 
+        if (id == R.id.action_hanList){
+            Intent intentHanList = new Intent(MainActivity.this,CheckHanbai.class);
+            startActivity(intentHanList);
+        }
         return super.onOptionsItemSelected(item);
     }
 

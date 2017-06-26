@@ -31,7 +31,9 @@ public class HanbaiDataInterface  extends SQLiteOpenHelper{
                 +HanbaiData.KEY_JAN+" TEXT, "
                 +HanbaiData.KEY_SHIRIZU+" TEXT, "
                 +HanbaiData.KEY_COMMODITY+" TEXT, "
+                +HanbaiData.KEY_YEAR+" TEXT, "
                 +HanbaiData.KEY_MONTH+" TEXT, "
+                +HanbaiData.KEY_DAY+" TEXT, "
                 +HanbaiData.KEY_CASH+" INTEGER, "
                 +HanbaiData.KEY_COUNT+" INTEGER, "
                 +HanbaiData.KEY_TAKEN+" TEXT)";

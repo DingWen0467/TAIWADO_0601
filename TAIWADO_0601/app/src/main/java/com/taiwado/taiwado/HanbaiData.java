@@ -20,6 +20,7 @@ public class HanbaiData extends BmobObject {
     public static final String KEY_COMMODITY = "commodity";
     public static final String KEY_CASH = "cash";
     public static final String KEY_DATE = "date";
+    public static final String KEY_YEAR = "year";
     public static final String KEY_MONTH = "month";
     public static final String KEY_DAY = "day";
     public static final String KEY_COUNT = "count";
@@ -39,6 +40,7 @@ public class HanbaiData extends BmobObject {
     public String commodity;
     public int cash;
     public int count;
+    public String year;
     public String month;
     public String day;
     public String taken;
@@ -129,6 +131,14 @@ public class HanbaiData extends BmobObject {
 
     public String getMonth() {
         return month;
+    }
+
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
     }
 
     public void setMonth(String month) {

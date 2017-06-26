@@ -3,11 +3,15 @@ package com.taiwado.taiwado;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.icu.text.SimpleDateFormat;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -20,6 +24,14 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Date;
+
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UpdateListener;
+
+import static com.taiwado.taiwado.CheckHanbai.RESULT_HAN;
+import static com.taiwado.taiwado.MainActivity.ObjectId;
 import static com.taiwado.taiwado.MainActivity.username;
 import static com.taiwado.taiwado.R.array.tenpos;
 
@@ -31,6 +43,9 @@ public class HanbaiList extends AppCompatActivity {
     private static String storename = null;
     private static String shirizuname = null;
     private static boolean isUpdate = false;
+    private static String ObjectID = null;
+    private static int ID = 0;
+    public static final int REQUEST_HAN = 1;
     private SharedPreferences pref;
     private SharedPreferences.Editor edtior;
     @Override
@@ -44,16 +59,15 @@ public class HanbaiList extends AppCompatActivity {
         updateSpinner();
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View view) {
                 if (checkInfo()){
-                    if (Second){
-                        Snackbar.make(view, "  販売件数を保存します！", Snackbar.LENGTH_LONG)
-                                .setAction("Action", null).show();
-                    }
+                    Snackbar.make(view, "  販売件数を保存します！", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
                 }
                 if (isUpdate){
-
+                    updateHanbaiData();
                 }else {
                     insertLocalData();
                 }
@@ -83,7 +97,9 @@ public class HanbaiList extends AppCompatActivity {
         textCommodity.setText(commodity);
         textShirizu.setText(shirizu);
     }
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void insertLocalData(){
+
         HanbaiDataRepo repo = new HanbaiDataRepo(this);
         HanbaiData hanbaiData = new HanbaiData();
         hanbaiData.setID(getAutoID());
@@ -94,10 +110,19 @@ public class HanbaiList extends AppCompatActivity {
         hanbaiData.setShirizu(String.valueOf(textShirizu.getText()));
         hanbaiData.setCommodity(String.valueOf(textCommodity.getText()));
         hanbaiData.setCash(Integer.parseInt(String.valueOf(editkakaku.getText())));
+        String str = String.valueOf(editdate.getText());
+        str = str.substring(str.length() - 2,str.length());
+        hanbaiData.setDay(str + "日");
+        hanbaiData.setMonth(getNowMonth());
+        hanbaiData.setYear(BaseActivity.getYear());
         hanbaiData.setCount(Integer.parseInt(String.valueOf(editcount.getText())));
-        int ID = repo.insertHanbaiData(hanbaiData);
-        String ObjectId = repo.CloudHanbaiData(hanbaiData,ID);
-        repo.updateObjectID(ObjectId,ID);
+        ID = repo.insertHanbaiData(hanbaiData);
+        CloudHanbaiData(hanbaiData,ID);
+        isUpdate = true;
+    }
+    private void updateHanbaiObjectID(){
+        HanbaiDataRepo repo = new HanbaiDataRepo(this);
+        repo.updateObjectID(ObjectID,ID);
     }
 
     private void init(){
@@ -119,12 +144,12 @@ public class HanbaiList extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
+        updateHanbaiObjectID();
         int id = item.getItemId();
 
         if (id == R.id.action_plus) {
             Intent intentInsertData = new Intent(HanbaiList.this,CheckHanbai.class);
-            startActivity(intentInsertData);
+            startActivityForResult(intentInsertData,REQUEST_HAN);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -220,4 +245,85 @@ public class HanbaiList extends AppCompatActivity {
 
         return autoID;
     }
+    public String getNowMonth() {
+        //取得当前系统日期
+        String month = null;
+        SimpleDateFormat formatter = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            formatter = new SimpleDateFormat("MM月");
+        }
+        Date curDate = new Date(System.currentTimeMillis());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            month = formatter.format(curDate);
+        }
+
+        return month;
+    }
+    public void onBackPressed(){
+        updateHanbaiObjectID();
+        CloseAllActivity.getInstance().finishActivity(this);
+    }
+
+    public void CloudHanbaiData(HanbaiData hanbaiData,int ID){
+        final String[] objectId = {null};
+        hanbaiData.setID(ID);
+        hanbaiData.save(new SaveListener<String>() {
+            @Override
+            public void done(String objectid, BmobException e) {
+                if (e == null){
+                    objectId[0] = objectid;
+                    ObjectID = objectId[0];
+                }
+            }
+        });
+    }
+
+    public void onActivityResult(int requestCode,int resultCode,Intent data){
+        isUpdate = false;
+        super.onActivityResult(requestCode,resultCode,data);
+        if (requestCode == REQUEST_HAN && resultCode == RESULT_HAN){
+            ObjectID = data.getExtras().getString("HanbaiObjectID");
+            ID = data.getExtras().getInt("HanbaiID");
+            getHanbaiData(ID);
+            int position = data.getExtras().getInt("storename");
+            spinnerStore.setSelection(position - 1);
+            spinnerStore.setEnabled(false);
+            isUpdate = true;
+        }
+
+    }
+    private void getHanbaiData(int id){
+        HanbaiDataRepo repo = new HanbaiDataRepo(this);
+        HanbaiData hanbaiData = new HanbaiData();
+        hanbaiData = repo.getByID(id);
+        editdate.setText(String.valueOf(hanbaiData.getDate()));
+        editjan.setText(String.valueOf(hanbaiData.getJan()));
+        editkakaku.setText(String.valueOf(hanbaiData.getCash()));
+        editcount.setText(String.valueOf(hanbaiData.getCount()));
+
+
+    }
+
+    private void updateHanbaiData(){
+        HanbaiDataRepo repo = new HanbaiDataRepo(this);
+        HanbaiData hanbaiData = new HanbaiData();
+        hanbaiData.setID(ID);
+        hanbaiData.setDate(String.valueOf(editdate.getText()));
+        hanbaiData.setJan(String.valueOf(editjan.getText()));
+        hanbaiData.setCash(Integer.parseInt(String.valueOf(editkakaku.getText())));
+        hanbaiData.setCount(Integer.parseInt(String.valueOf(editcount.getText())));
+        repo.updateData(hanbaiData);
+
+        hanbaiData.update(ObjectId, new UpdateListener() {
+            @Override
+            public void done(BmobException e) {
+                if (e == null) {
+                    Log.i("bmob", "OK");
+                } else {
+                    Log.i("bmob", "更新失败：" + e.getMessage() + "," + e.getErrorCode());
+                }
+            }
+        });
+    }
+
 }

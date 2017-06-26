@@ -40,7 +40,7 @@
                 android:layout_margin="1dp"
 
                 android:layout_weight="1"
-                android:entries="@array/shirizu"
+                android:entries="@array/shirizus"
                 android:padding="1dp"
                 android:paddingBottom="1dp"
                 android:paddingEnd="1dp"
@@ -76,7 +76,9 @@
                     android:layout_weight="0.2"
                     android:background="@android:color/holo_blue_light"
                     android:entries="@array/months"
-                    android:spinnerMode="dialog"></Spinner>
+                    android:spinnerMode="dialog">
+
+                </Spinner>
 
                 <TextView
                     android:id="@+id/table_1"
@@ -98,7 +100,7 @@
                     android:background="@android:color/holo_blue_dark"
                     android:gravity="center_horizontal"
                     android:padding="10dp"
-                    android:text="商品"
+                    android:text="価格"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 

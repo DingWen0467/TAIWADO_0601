@@ -135,7 +135,7 @@ public class BaseActivity extends Activity {
         return day;
     }
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public String getYear(){
+    public static String getYear(){
         String str = null;
         Date date = new Date();
         Calendar cal = Calendar.getInstance();
