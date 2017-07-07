@@ -1,30 +1,30 @@
-package com.taiwado.taiwado;
+package com.taiwado.taiwado.com.taiwado.taiwado.DB;
 
 import cn.bmob.v3.BmobObject;
 
 /**
- * Created by tei on 2017/06/20.
+ * Created by tei on 2017/06/28.
  */
 
-public class StockNum extends BmobObject {
-    public static final String TABLE = "StockNum";
+public class ProductInfo extends BmobObject {
 
-    //表的各域名
+    public static final String TABLE = "ProductInfo";
+
     public static final String KEY_ID = "ID";
     public static final String KEY_OBID = "objectID";
-    public static final String KEY_EXITNUM = "exitNum";
-    public static final String KEY_STORENAME = "storeName";
     public static final String KEY_JAN = "jan";
     public static final String KEY_SHIRIZU = "shirizu";
     public static final String KEY_COMMODITY = "commodity";
-    //属性
+    public static final String KEY_CASH = "cash";
+    public static final String KEY_COUNT = "count";
+
     public int ID;
     public String objectID;
-    public int exitNum;
-    public String storeName;
     public String jan;
     public String shirizu;
     public String commodity;
+    public int cash;
+    public int count;
 
     public int getID() {
         return ID;
@@ -40,22 +40,6 @@ public class StockNum extends BmobObject {
 
     public void setObjectID(String objectID) {
         this.objectID = objectID;
-    }
-
-    public int getExitNum() {
-        return exitNum;
-    }
-
-    public void setExitNum(int exitNum) {
-        this.exitNum = exitNum;
-    }
-
-    public String getStoreName() {
-        return storeName;
-    }
-
-    public void setStoreName(String storeName) {
-        this.storeName = storeName;
     }
 
     public String getJan() {
@@ -80,5 +64,21 @@ public class StockNum extends BmobObject {
 
     public void setCommodity(String commodity) {
         this.commodity = commodity;
+    }
+
+    public int getCash() {
+        return cash;
+    }
+
+    public void setCash(int cash) {
+        this.cash = cash;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
     }
 }

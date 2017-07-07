@@ -1,11 +1,11 @@
 package com.taiwado.taiwado;
 
-import android.app.Activity;
 import android.icu.text.SimpleDateFormat;
 import android.icu.util.Calendar;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.BaseAdapter;
@@ -18,12 +18,11 @@ import cn.bmob.v3.exception.BmobException;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
-public class BaseActivity extends Activity {
+public class BaseActivity extends AppCompatActivity {
 
     public static String TAG = "bmob";
     protected ListView mListview;
     protected BaseAdapter mAdapter;
-
     private CompositeSubscription mCompositeSubscription;
 
     /**

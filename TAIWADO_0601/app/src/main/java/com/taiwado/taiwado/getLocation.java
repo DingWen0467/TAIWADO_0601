@@ -148,7 +148,7 @@ public class getLocation extends Activity {
 
         HttpClient client = new DefaultHttpClient();
         // 向指定地址发送GET请求
-        HttpGet httpGet = new HttpGet("http://maps.google.com/maps/api/"
+        HttpGet httpGet = new HttpGet("http://maps.googleapis.com/maps/api/"
                 + "geocode/json?latlng="
                 + latitude + "," + longitude
                 + "&sensor=false®ion=cn");

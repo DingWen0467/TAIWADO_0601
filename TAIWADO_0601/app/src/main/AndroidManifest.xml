@@ -41,11 +41,11 @@
         <activity android:name=".KyuukaActivity" />
         <activity
             android:name=".TrafficSaveActivity"
-            android:label="@string/title_activity_traffic_save"
+            android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".HanbaiList"
-            android:label="@string/title_activity_hanbai_list"
+            android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".CheckHanbai"></activity>
     </application>

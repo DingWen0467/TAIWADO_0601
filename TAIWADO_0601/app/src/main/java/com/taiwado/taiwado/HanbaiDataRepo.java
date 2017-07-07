@@ -214,6 +214,52 @@ public class HanbaiDataRepo {
 
         return hanbailist;
     }
+
+    public ArrayList<HashMap<String, String>> getHanbaiListAll(String username, String year ,String month, String shirizu){
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        String selectQuery = "SELECT "+
+                HanbaiData.KEY_ID + "," +
+                HanbaiData.KEY_OBID + "," +
+                HanbaiData.KEY_UNAME + "," +
+                HanbaiData.KEY_STORENAME + "," +
+                HanbaiData.KEY_CASH + "," +
+                HanbaiData.KEY_JAN + "," +
+                HanbaiData.KEY_SHIRIZU + "," +
+                HanbaiData.KEY_COMMODITY + "," +
+                HanbaiData.KEY_COUNT + "," +
+                HanbaiData.KEY_TAKEN + "," +
+                HanbaiData.KEY_DAY + "," +
+                HanbaiData.KEY_MONTH + "," +
+                HanbaiData.KEY_YEAR + "," +
+                HanbaiData.KEY_DATE +
+                " FROM " + HanbaiData.TABLE
+                + " WHERE " +
+                HanbaiData.KEY_UNAME + "=? and " +
+                HanbaiData.KEY_YEAR + "=? and " +
+                HanbaiData.KEY_MONTH + "=? and " +
+                HanbaiData.KEY_SHIRIZU + "=? "
+                ;
+
+        ArrayList<HashMap<String,String>> hanbailist = new ArrayList<HashMap<String, String>>();
+        Cursor cursor = db.rawQuery(selectQuery,new String[]{String.valueOf(username),String.valueOf(year),String.valueOf(month),String.valueOf(shirizu)});
+
+        if(cursor.moveToFirst()){
+            do{
+                HashMap<String,String> hashData = new HashMap<String,String>();
+                hashData.put("date",cursor.getString(cursor.getColumnIndex(HanbaiData.KEY_DAY)));
+                hashData.put("jan",cursor.getString(cursor.getColumnIndex(HanbaiData.KEY_JAN)));
+                hashData.put("cash", String.valueOf(cursor.getInt(cursor.getColumnIndex(HanbaiData.KEY_CASH))));
+                hashData.put("count", String.valueOf(cursor.getInt(cursor.getColumnIndex(HanbaiData.KEY_COUNT))));
+                hanbailist.add(hashData);
+
+            }while(cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+
+        return hanbailist;
+    }
+
     public int getHanbaiID(String username, String date, String jan,String cash,int count,String storename){
         int HanbaiID = 0;
         SQLiteDatabase db = dbHelper.getWritableDatabase();

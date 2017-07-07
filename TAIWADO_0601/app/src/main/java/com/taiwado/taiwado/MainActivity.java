@@ -17,6 +17,11 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.taiwado.taiwado.com.taiwado.taiwado.DB.BarashiRepo;
+import com.taiwado.taiwado.com.taiwado.taiwado.DB.ProductRepo;
+import com.taiwado.taiwado.com.taiwado.taiwado.DB.SaleGruopRepo;
+
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -38,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
     private long clickTime = 0; // 第一次点击的时间
     public TimeCount timeCount;
     BmobRealTimeData commInfo = new BmobRealTimeData();
-    List<StockNum> messages = new ArrayList<StockNum>();
     List<String> mess = new ArrayList<String>();
 
     @Override
@@ -85,17 +89,22 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        /*if (id == R.id.action_settings) {
             Intent intentKyuuka = new Intent(MainActivity.this, KyuukaActivity.class);
             intentKyuuka.putExtra("username", username);
             intentKyuuka.putExtra("main", "main");
             startActivity(intentKyuuka);
             return true;
+        }*/
+        //if (id == R.id.action_search) {
+        //    Intent intentSearchList = new Intent(MainActivity.this, SearchListActivity.class);
+        //    startActivity(intentSearchList);
+        //}
+        if (id == R.id.action_NumCheck) {
+            Intent intentNumCheck = new Intent(MainActivity.this,SearchListActivity.class);
+            startActivity(intentNumCheck);
         }
-        if (id == R.id.action_search) {
-            Intent intentSearchList = new Intent(MainActivity.this, SearchListActivity.class);
-            startActivity(intentSearchList);
-        }
+
         if (id == R.id.action_traList) {
             Intent intentTraList = new Intent(MainActivity.this, TrafficListActivity.class);
             startActivity(intentTraList);
@@ -262,15 +271,22 @@ public class MainActivity extends AppCompatActivity {
                     mess.add(String.valueOf(data.optInt("ID")));
                     mess.add(data.optString("storeName"));
 
-                    updateStrckNum(data.optInt("ID"),data.optString("jan"),data.optString("storeName"),data.optInt("exitNum"),data.optString("shirizu"),data.optString("commodity"));
+                    try {
+                        updateStockNum(data.optInt("ID"),data.getString("objectId"),data.optString("jan"),data.optString("storeName"),data.optInt("exitNum"),data.optString("shirizu"),data.optString("commodity"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
+
+        downLoadData();
     }
-    private  void updateStrckNum(int ID,String jan,String storeName,int exitNum,String shirizu,String commodity){
+    private  void updateStockNum(int ID,String objectid,String jan,String storeName,int exitNum,String shirizu,String commodity){
         StockNumRepo repo = new StockNumRepo(this);
-        StockNum stockNum = new StockNum(ID,exitNum,storeName,jan);
+        StockNum stockNum = new StockNum();
         stockNum.setID(ID);
+        stockNum.setObjectID(objectid);
         stockNum.setJan(jan);
         stockNum.setStoreName(storeName);
         stockNum.setExitNum(exitNum);
@@ -282,5 +298,14 @@ public class MainActivity extends AppCompatActivity {
         }else {
             repo.updateCount(stockNum);
         }
+    }
+
+    private void downLoadData(){
+        SaleGruopRepo saleRepo = new SaleGruopRepo(this);
+        BarashiRepo barashiRepo = new BarashiRepo(this);
+        ProductRepo productRepo = new ProductRepo(this);
+        saleRepo.queryObjet();
+        barashiRepo.queryObject();
+        productRepo.queryObject();
     }
 }

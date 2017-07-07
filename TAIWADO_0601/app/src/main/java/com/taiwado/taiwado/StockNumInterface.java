@@ -24,6 +24,7 @@ public class StockNumInterface extends SQLiteOpenHelper {
         System.out.println("Create the Database and table");
         String CREATE_TABLE_StockNum = "CREATE TABLE " + StockNum.TABLE +"("
                 +StockNum.KEY_ID+" INTEGER PRIMARY KEY AUTOINCREMENT ,"
+                +StockNum.KEY_OBID+" TEXT, "
                 +StockNum.KEY_JAN+" TEXT, "
                 +StockNum.KEY_EXITNUM+" INTEGER, "
                 +StockNum.KEY_SHIRIZU+" TEXT, "

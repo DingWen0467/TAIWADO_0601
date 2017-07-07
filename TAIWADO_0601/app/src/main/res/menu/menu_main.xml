@@ -3,27 +3,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.taiwado.taiwado.MainActivity">
     <item
-        android:id="@+id/action_search"
-        android:title="@string/action_search"
+        android:id="@+id/action_NumCheck"
+        android:orderInCategory="80"
         android:icon="@drawable/search"
-        app:showAsAction="always"
-        android:inputType="textCapWords"
-        android:imeOptions="actionSearch"
-        app:actionViewClass="android.support.v7.widget.SearchView"
-        />
-    <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
+        android:title="@string/action_search"
         app:showAsAction="never" />
+
     <item
         android:id="@+id/action_traList"
-        android:orderInCategory="100"
+        android:orderInCategory="80"
         android:title="@string/action_traList"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_hanList"
-        android:orderInCategory="100"
+        android:orderInCategory="80"
         app:showAsAction="never"
         android:title="販売照会" />
 </menu>

@@ -1,8 +1,10 @@
 package com.taiwado.taiwado;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -55,6 +57,8 @@ public class SearchListActivity extends AppCompatActivity {
             listView.setAdapter(adapterlist);
             shirizu.setText(repo.getShirizu(text));
             stockname.setText(repo.getCommodity(text));
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.toggleSoftInput(0,InputMethodManager.HIDE_NOT_ALWAYS);
         }
     }
 }

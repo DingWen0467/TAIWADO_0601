@@ -63,7 +63,7 @@ public class CheckHanbai extends AppCompatActivity {
         ArrayAdapter<String> adapterStore = new ArrayAdapter<String>(this,android.R.layout.select_dialog_item,storeItems);
         adapterStore.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerStore.setAdapter(adapterStore);
-        storename = (String)spinnerStore.getItemAtPosition(0);
+        storename = (String)spinnerStore.getItemAtPosition(1);
         spinnerStore.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -133,7 +133,12 @@ public class CheckHanbai extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void getList(){
-        HanbaiList =  repo.getHanbaiList(username,getYear(),month,storename,shirizu);
+
+        if (storename.equals("")){
+            HanbaiList =  repo.getHanbaiListAll(username,getYear(),month,shirizu);
+        }else {
+            HanbaiList =  repo.getHanbaiList(username,getYear(),month,storename,shirizu);
+        }
         adapterlist = new SimpleAdapter(this,HanbaiList,R.layout.hanbai_item,new String[]{"date","jan","cash","count"},new int[]{R.id.date,R.id.jan,R.id.cash,R.id.count});
         listView.setAdapter(adapterlist);
         listView.setOnCreateContextMenuListener(MenuList);

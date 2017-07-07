@@ -91,10 +91,10 @@
 
             <Button
                 android:id="@+id/button_Uriage"
-                android:layout_width="198dp"
+                android:layout_width="match_parent"
                 android:layout_height="75dp"
                 android:onClick="doClickOk"
-                android:text="売り上げ集計"
+                android:text="出庫管理"
                 android:textSize="50px"
                 android:layout_alignTop="@+id/button_Zaikurakensu"
                 android:layout_toRightOf="@+id/button_Zaikurakensu"
@@ -106,7 +106,7 @@
                 android:layout_height="75dp"
 
                 android:onClick="doClickOk"
-                android:text="在庫件数取得"
+                android:text="入庫管理"
                 android:textSize="50px"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentLeft="true"

@@ -90,10 +90,13 @@
         <item>前休</item>
         <item>後休</item>
     </string-array>
+
     <string-array name="JAN">
         <item>2075</item>
         <item>2983</item>
         <item>2082</item>
+        <item>2099</item>
+        <item>3256</item>
         <item>3119</item>
         <item>2976</item>
         <item>2990</item>
@@ -104,5 +107,19 @@
         <item>2129</item>
         <item>2105</item>
         <item>3199</item>
+    </string-array>
+
+    <string-array name="InWarehouse">
+        <item>売り上げ</item>
+        <item>返品集計</item>
+        <item>破損集計</item>
+        <item>テスター</item>
+    </string-array>
+
+    <string-array name="OutWarehouse">
+        <item>売り上げ</item>
+        <item>破損記入</item>
+        <item>テスター</item>
+        <item>プレゼント</item>
     </string-array>
 </resources>
